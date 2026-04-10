@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privatumo politika — Kallo</title>
+<meta name="description" content="Kallo privatumo politika — kaip renkame, naudojame ir saugome jūsų duomenis pagal BDAR reikalavimus." />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="mask-icon" href="/favicon.svg" color="#1A0A00" />
+<meta name="theme-color" content="#1A0A00" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --coral: #FF6B47;
+    --ink: #1A0A00;
+    --ink-soft: #2B1A10;
+    --blush: #FFF5F0;
+    --pale: #FFD5C8;
+    --cream: #FFFCFA;
+    --muted: #6B5B52;
+    --border: rgba(26, 10, 0, 0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--coral); text-decoration: none; border-bottom: 1px solid var(--pale); transition: border-color 0.2s; }
+  a:hover { border-color: var(--coral); }
+
+  /* Nav */
+  nav {
+    padding: 24px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--cream);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    background: rgba(255, 252, 250, 0.88);
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+  }
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--ink);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .logo-icon span {
+    font-family: 'DM Serif Display', serif;
+    color: var(--cream);
+    font-weight: 400;
+    font-size: 22px;
+    transform: translateX(-1px);
+  }
+  .logo-icon::after {
+    content: '';
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 6px;
+    height: 6px;
+    background: var(--coral);
+    border-radius: 50%;
+  }
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 26px;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  .back-link {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    border: none;
+  }
+  .back-link:hover { color: var(--coral); }
+
+  /* Main content */
+  main.legal {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 80px 40px 120px;
+    position: relative;
+  }
+  main.legal::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: -20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255, 107, 71, 0.08), transparent 60%);
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: -1;
+  }
+  header.doc-header {
+    margin-bottom: 60px;
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--coral);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: clamp(40px, 5vw, 58px);
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    margin-bottom: 18px;
+  }
+  .updated {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--blush);
+    border: 1px solid var(--pale);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 60px;
+  }
+  .toc h2 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--coral);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+  .toc ol {
+    list-style: none;
+    counter-reset: toc-counter;
+    columns: 2;
+    column-gap: 30px;
+  }
+  .toc li {
+    counter-increment: toc-counter;
+    padding: 6px 0;
+    break-inside: avoid;
+  }
+  .toc li::before {
+    content: counter(toc-counter, decimal-leading-zero) " ";
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 13px;
+    margin-right: 8px;
+  }
+  .toc a {
+    color: var(--ink);
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .toc a:hover { color: var(--coral); }
+
+  /* Sections */
+  section.clause {
+    margin-bottom: 48px;
+    scroll-margin-top: 100px;
+  }
+  section.clause h2 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 28px;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    margin-bottom: 18px;
+    color: var(--ink);
+  }
+  section.clause h2 .num {
+    display: inline-block;
+    color: var(--coral);
+    margin-right: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  section.clause h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: -0.005em;
+    margin-top: 24px;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  section.clause p {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  section.clause ul,
+  section.clause ol.inner {
+    margin: 12px 0 20px 22px;
+  }
+  section.clause li {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  section.clause strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  section.clause code {
+    background: var(--blush);
+    border: 1px solid var(--pale);
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-family: 'DM Sans', monospace;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  /* Contact box */
+  .contact-box {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 20px;
+    padding: 36px 36px;
+    margin-top: 48px;
+  }
+  .contact-box h2 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 26px;
+    margin-bottom: 14px;
+    color: var(--cream);
+  }
+  .contact-box p {
+    color: rgba(255, 245, 240, 0.75);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 6px;
+  }
+  .contact-box a {
+    color: var(--coral);
+    border-bottom-color: rgba(255, 107, 71, 0.4);
+  }
+  .contact-box strong { color: var(--cream); }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  footer .meta {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  footer .links {
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+  }
+  footer .links a {
+    color: var(--muted);
+    border: none;
+  }
+  footer .links a:hover { color: var(--coral); }
+
+  /* Mobile */
+  @media (max-width: 720px) {
+    nav { padding: 16px 20px; }
+    .logo-icon { width: 32px; height: 32px; border-radius: 8px; }
+    .logo-icon span { font-size: 18px; }
+    .logo-icon::after { top: 6px; right: 6px; }
+    .logo-text { font-size: 22px; }
+    .back-link { font-size: 13px; }
+    main.legal { padding: 50px 20px 80px; }
+    h1 { font-size: 34px; }
+    .updated { font-size: 13px; }
+    .toc { padding: 22px 24px; margin-bottom: 44px; }
+    .toc ol { columns: 1; }
+    section.clause { margin-bottom: 40px; }
+    section.clause h2 { font-size: 24px; }
+    section.clause p, section.clause li { font-size: 15px; }
+    .contact-box { padding: 28px 24px; }
+    .contact-box h2 { font-size: 22px; }
+    footer { padding: 32px 20px; flex-direction: column; text-align: center; gap: 16px; }
+    footer .links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-icon"><span>K</span></div>
+    <div class="logo-text">allo</div>
+  </a>
+  <a href="/" class="back-link">← Grįžti į pradžią</a>
+</nav>
+
+<main class="legal">
+  <header class="doc-header">
+    <div class="eyebrow">Teisė</div>
+    <h1>Privatumo politika</h1>
+    <p class="updated">Paskutinį kartą atnaujinta: 2026 m. balandžio 10 d.</p>
+  </header>
+
+  <div class="toc">
+    <h2>Turinys</h2>
+    <ol>
+      <li><a href="#kas-mes-esame">Kas mes esame</a></li>
+      <li><a href="#kokius-duomenis">Kokius duomenis renkame</a></li>
+      <li><a href="#kam-naudojame">Kam naudojame duomenis</a></li>
+      <li><a href="#teisinis-pagrindas">Teisinis pagrindas</a></li>
+      <li><a href="#saugojimas">Duomenų saugojimas</a></li>
+      <li><a href="#dalijimasis">Su kuo dalijamės</a></li>
+      <li><a href="#jusu-teises">Jūsų teisės</a></li>
+      <li><a href="#slapukai">Slapukai</a></li>
+      <li><a href="#saugumas">Saugumas</a></li>
+      <li><a href="#pakeitimai">Politikos pakeitimai</a></li>
+      <li><a href="#kontaktai">Kontaktai</a></li>
+    </ol>
+  </div>
+
+  <section class="clause" id="kas-mes-esame">
+    <h2><span class="num">01</span>Kas mes esame</h2>
+    <p><strong>Kallo</strong> yra dirbtinio intelekto pokalbių roboto paslauga, skirta Lietuvos grožio, wellness ir paslaugų sektoriaus verslams. Mūsų produktas leidžia klientams užduoti klausimus ir užsirezervuoti laikus tiesiogiai per jūsų svetainę, o visos rezervacijos automatiškai patenka į jūsų Google Kalendorių.</p>
+    <p>Ši privatumo politika paaiškina, kaip <strong>Kallo</strong> (toliau — „mes", „mūsų") renka, naudoja ir saugo asmens duomenis pagal 2016/679 Bendrąjį duomenų apsaugos reglamentą (BDAR) bei Lietuvos Respublikos asmens duomenų teisinės apsaugos įstatymą.</p>
+    <p>Duomenų valdytojas šiame dokumente — Kallo komanda, susisiekti galima el. paštu <a href="mailto:labas@kallo.lt">labas@kallo.lt</a>.</p>
+  </section>
+
+  <section class="clause" id="kokius-duomenis">
+    <h2><span class="num">02</span>Kokius duomenis renkame</h2>
+    <p>Renkame tik tuos duomenis, kurie būtini paslaugai teikti. Niekada nerenkame jokių nereikalingų asmens duomenų.</p>
+
+    <h3>2.1. Svetainės lankytojų duomenys</h3>
+    <p>Kai klientas bendrauja su Kallo pokalbių robotu jūsų svetainėje, renkame:</p>
+    <ul>
+      <li>pokalbio tekstą ir klientų klausimus;</li>
+      <li>kliento pateiktus kontaktinius duomenis (vardą, tel. numerį, el. paštą) — tik tuomet, jei jis pats juos pateikia rezervuodamas laiką;</li>
+      <li>rezervacijos detales (pasirinkta paslauga, data, laikas);</li>
+      <li>naršyklės tipą, kalbą ir apytikslę geografinę vietą (miestą) — statistinei analizei.</li>
+    </ul>
+
+    <h3>2.2. Klientų (salono savininkų) duomenys</h3>
+    <p>Kai registruojatės Kallo platformoje, renkame:</p>
+    <ul>
+      <li>el. pašto adresą;</li>
+      <li>verslo pavadinimą ir svetainės adresą;</li>
+      <li>mokėjimo informaciją (tvarkoma per <strong>Stripe</strong> — mes patys kortelių duomenų nematome ir nesaugome);</li>
+      <li>Google Kalendoriaus prieigą (tik jei ją suteikiate integracijai).</li>
+    </ul>
+
+    <h3>2.3. Techniniai žurnalai</h3>
+    <p>Automatiškai fiksuojame IP adresus, užklausų laikus ir klaidų žurnalus — tik saugumui ir techniniam palaikymui. Šie duomenys saugomi ne ilgiau kaip 30 dienų.</p>
+  </section>
+
+  <section class="clause" id="kam-naudojame">
+    <h2><span class="num">03</span>Kam naudojame duomenis</h2>
+    <p>Jūsų ir jūsų klientų duomenis naudojame išimtinai šiais tikslais:</p>
+    <ul>
+      <li>Kallo pokalbių roboto funkcionavimui — atsakymų generavimui iš jūsų svetainės turinio;</li>
+      <li>rezervacijų sukūrimui ir sinchronizavimui su jūsų Google Kalendoriumi;</li>
+      <li>automatinių SMS ir el. pašto patvirtinimų siuntimui klientams ir jums;</li>
+      <li>apmokėjimams už paslaugą (per Stripe);</li>
+      <li>techninės pagalbos teikimui, jei jūs jos paprašote;</li>
+      <li>paslaugos saugumo užtikrinimui ir kovai su piktnaudžiavimu.</li>
+    </ul>
+    <p><strong>Mes niekada nenaudojame jūsų ar jūsų klientų duomenų reklamai, profiliavimui ar pardavimui trečiosioms šalims.</strong></p>
+  </section>
+
+  <section class="clause" id="teisinis-pagrindas">
+    <h2><span class="num">04</span>Teisinis pagrindas</h2>
+    <p>Asmens duomenis tvarkome remdamiesi šiais BDAR teisiniais pagrindais:</p>
+    <ul>
+      <li><strong>Sutarties vykdymas</strong> (BDAR 6 str. 1 d. b p.) — kai duomenys reikalingi paslaugai teikti, pvz., rezervacijai sukurti;</li>
+      <li><strong>Teisėtas interesas</strong> (BDAR 6 str. 1 d. f p.) — techniniams žurnalams, saugumui ir paslaugos gerinimui;</li>
+      <li><strong>Sutikimas</strong> (BDAR 6 str. 1 d. a p.) — marketingo pranešimams, jei jums jų siunčiame (jūs visada galite atsisakyti);</li>
+      <li><strong>Teisinė prievolė</strong> (BDAR 6 str. 1 d. c p.) — apskaitos ir mokesčių dokumentams saugoti.</li>
+    </ul>
+  </section>
+
+  <section class="clause" id="saugojimas">
+    <h2><span class="num">05</span>Duomenų saugojimas</h2>
+    <p>Saugome duomenis tik tiek laiko, kiek būtina:</p>
+    <ul>
+      <li><strong>Pokalbių istorija</strong> — 90 dienų nuo pokalbio pabaigos, tuomet automatiškai ištrinama;</li>
+      <li><strong>Rezervacijų duomenys</strong> — tol, kol naudojate paslaugą, ir 6 mėnesius po sutarties nutraukimo;</li>
+      <li><strong>Sąskaitų duomenys</strong> — 10 metų pagal Lietuvos buhalterinės apskaitos reikalavimus;</li>
+      <li><strong>Techniniai žurnalai</strong> — 30 dienų;</li>
+      <li><strong>Kontaktiniai duomenys registracijai</strong> — tol, kol turite aktyvią paskyrą, ir iki 6 mėnesių po jos uždarymo.</li>
+    </ul>
+    <p>Visi duomenys saugomi <strong>Europos Sąjungos serveriuose</strong>, šiuo metu Netlify (JAV kompanijos ES regionas) ir Supabase (Airija). Niekada neperkeliame duomenų į trečiąsias šalis be jūsų sutikimo.</p>
+  </section>
+
+  <section class="clause" id="dalijimasis">
+    <h2><span class="num">06</span>Su kuo dalijamės</h2>
+    <p>Jūsų duomenų <strong>neparduodame</strong> ir nesidaliname su jokiomis trečiosiomis šalimis reklamos ar marketingo tikslais. Tačiau norėdami teikti paslaugą, pasitelkiame šiuos techninius partnerius (duomenų tvarkytojus):</p>
+    <ul>
+      <li><strong>Anthropic (Claude API)</strong> — atsakymų generavimui. Anthropic nesaugo pokalbių ir nenaudoja jų modelio mokymui (pagal jų verslo API sąlygas);</li>
+      <li><strong>Netlify</strong> — svetainės hostingui ir formų duomenų saugojimui;</li>
+      <li><strong>Supabase</strong> — duomenų bazės paslaugoms ES regione;</li>
+      <li><strong>Stripe</strong> — mokėjimų apdorojimui (mes nematome jūsų kortelės duomenų);</li>
+      <li><strong>Google</strong> — tik jei pats integruojate Google Kalendorių — prieigą valdote jūs pats per Google paskyros nustatymus;</li>
+      <li><strong>Twilio</strong> — SMS patvirtinimams siųsti.</li>
+    </ul>
+    <p>Su kiekvienu iš šių partnerių turime arba turėsime pasirašytą Duomenų tvarkymo susitarimą (DPA) pagal BDAR 28 straipsnio reikalavimus.</p>
+  </section>
+
+  <section class="clause" id="jusu-teises">
+    <h2><span class="num">07</span>Jūsų teisės</h2>
+    <p>Pagal BDAR jūs turite šias teises dėl savo asmens duomenų:</p>
+    <ul>
+      <li><strong>Teisę susipažinti</strong> su savo duomenimis ir gauti jų kopiją;</li>
+      <li><strong>Teisę ištaisyti</strong> netikslius ar pasenusius duomenis;</li>
+      <li><strong>Teisę ištrinti</strong> duomenis („teisė būti pamirštam");</li>
+      <li><strong>Teisę apriboti</strong> duomenų tvarkymą;</li>
+      <li><strong>Teisę į duomenų perkeliamumą</strong> — gauti savo duomenis mašininio skaitymo formatu;</li>
+      <li><strong>Teisę nesutikti</strong> su tvarkymu;</li>
+      <li><strong>Teisę atšaukti sutikimą</strong> bet kuriuo metu (jei tvarkymas grindžiamas sutikimu);</li>
+      <li><strong>Teisę pateikti skundą</strong> Valstybinei duomenų apsaugos inspekcijai (<a href="https://vdai.lrv.lt">vdai.lrv.lt</a>).</li>
+    </ul>
+    <p>Norėdami pasinaudoti bet kuria iš šių teisių, rašykite mums el. paštu <a href="mailto:labas@kallo.lt">labas@kallo.lt</a>. Į užklausą atsakysime per <strong>30 dienų</strong> arba greičiau.</p>
+  </section>
+
+  <section class="clause" id="slapukai">
+    <h2><span class="num">08</span>Slapukai</h2>
+    <p>Kallo svetainė <strong>nenaudoja sekimo slapukų</strong>, nerodo reklamos ir neskrienia duomenų trečiosioms šalims. Mes naudojame tik <strong>techninius sesijos slapukus</strong>, būtinus svetainės veikimui (pvz., prisijungimui, formos būsenai).</p>
+    <p>Jei integruosite Kallo pokalbių robotą į savo svetainę, mūsų embed scriptas įrašys vieną techninį slapuką (<code>kallo_session</code>), kad sekti pokalbio kontekstą — jis galioja 24 valandas ir ištrinamas automatiškai.</p>
+  </section>
+
+  <section class="clause" id="saugumas">
+    <h2><span class="num">09</span>Saugumas</h2>
+    <p>Jūsų duomenų saugumą užtikriname šiomis priemonėmis:</p>
+    <ul>
+      <li>visas duomenų perdavimas vyksta per HTTPS / TLS 1.3 šifravimą;</li>
+      <li>duomenų bazės prieiga apribota IP baltaisiais sąrašais ir dvigubu autentifikavimu;</li>
+      <li>slaptažodžiai saugomi tik maišos forma (bcrypt);</li>
+      <li>reguliariai atnaujiname serverių programinę įrangą;</li>
+      <li>vidinis prieigos principas — tik tie komandos nariai, kuriems tai būtina darbui.</li>
+    </ul>
+    <p>Jei įvyktų duomenų saugumo pažeidimas, apie tai informuosime jus ir Valstybinę duomenų apsaugos inspekciją per <strong>72 valandas</strong>, kaip reikalauja BDAR 33 straipsnis.</p>
+  </section>
+
+  <section class="clause" id="pakeitimai">
+    <h2><span class="num">10</span>Politikos pakeitimai</h2>
+    <p>Šią privatumo politiką galime kartkartėmis atnaujinti — pavyzdžiui, pasikeitus teisės aktams arba atsiradus naujoms funkcijoms. Naują versiją paskelbsime šiame puslapyje ir, jei pakeitimai yra esminiai, papildomai pranešime el. paštu.</p>
+    <p>Dokumento viršuje visuomet rodoma paskutinio atnaujinimo data.</p>
+  </section>
+
+  <section class="clause" id="kontaktai">
+    <h2><span class="num">11</span>Kontaktai</h2>
+    <p>Jei turite klausimų dėl šios privatumo politikos arba norite pasinaudoti savo teisėmis, rašykite mums:</p>
+    <div class="contact-box">
+      <h2>Kallo</h2>
+      <p><strong>El. paštas:</strong> <a href="mailto:labas@kallo.lt">labas@kallo.lt</a></p>
+      <p><strong>Privatumo klausimais:</strong> <a href="mailto:privatumas@kallo.lt">privatumas@kallo.lt</a></p>
+      <p><strong>Svetainė:</strong> <a href="https://kallo.lt">kallo.lt</a></p>
+      <p style="margin-top: 14px;">Į visus klausimus atsakome per darbo valandas — dažniausiai per kelias valandas, visada per 30 dienų.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="meta">© 2026 Kallo · Sukurta Vilniuje</div>
+  <div class="links">
+    <a href="/">Pradžia</a>
+    <a href="/privatumas.html">Privatumas</a>
+    <a href="/salygos.html">Sąlygos</a>
+    <a href="mailto:labas@kallo.lt">labas@kallo.lt</a>
+  </div>
+</footer>
+
+</body>
+</html>

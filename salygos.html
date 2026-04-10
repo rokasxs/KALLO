@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Paslaugų teikimo sąlygos — Kallo</title>
+<meta name="description" content="Kallo paslaugų teikimo sąlygos — naudojimo taisyklės, mokėjimai, atsakomybės ribos ir kontaktai." />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="mask-icon" href="/favicon.svg" color="#1A0A00" />
+<meta name="theme-color" content="#1A0A00" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --coral: #FF6B47;
+    --ink: #1A0A00;
+    --ink-soft: #2B1A10;
+    --blush: #FFF5F0;
+    --pale: #FFD5C8;
+    --cream: #FFFCFA;
+    --muted: #6B5B52;
+    --border: rgba(26, 10, 0, 0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--coral); text-decoration: none; border-bottom: 1px solid var(--pale); transition: border-color 0.2s; }
+  a:hover { border-color: var(--coral); }
+
+  /* Nav */
+  nav {
+    padding: 24px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    background: rgba(255, 252, 250, 0.88);
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+  }
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--ink);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .logo-icon span {
+    font-family: 'DM Serif Display', serif;
+    color: var(--cream);
+    font-weight: 400;
+    font-size: 22px;
+    transform: translateX(-1px);
+  }
+  .logo-icon::after {
+    content: '';
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 6px;
+    height: 6px;
+    background: var(--coral);
+    border-radius: 50%;
+  }
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 26px;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  .back-link {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    border: none;
+  }
+  .back-link:hover { color: var(--coral); }
+
+  /* Main */
+  main.legal {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 80px 40px 120px;
+    position: relative;
+  }
+  main.legal::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: -20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255, 107, 71, 0.08), transparent 60%);
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: -1;
+  }
+  header.doc-header { margin-bottom: 60px; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--coral);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: clamp(40px, 5vw, 58px);
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    margin-bottom: 18px;
+  }
+  .updated { font-size: 14px; color: var(--muted); }
+
+  .toc {
+    background: var(--blush);
+    border: 1px solid var(--pale);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 60px;
+  }
+  .toc h2 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--coral);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+  .toc ol {
+    list-style: none;
+    counter-reset: toc-counter;
+    columns: 2;
+    column-gap: 30px;
+  }
+  .toc li {
+    counter-increment: toc-counter;
+    padding: 6px 0;
+    break-inside: avoid;
+  }
+  .toc li::before {
+    content: counter(toc-counter, decimal-leading-zero) " ";
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 13px;
+    margin-right: 8px;
+  }
+  .toc a {
+    color: var(--ink);
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .toc a:hover { color: var(--coral); }
+
+  section.clause {
+    margin-bottom: 48px;
+    scroll-margin-top: 100px;
+  }
+  section.clause h2 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 28px;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    margin-bottom: 18px;
+    color: var(--ink);
+  }
+  section.clause h2 .num {
+    display: inline-block;
+    color: var(--coral);
+    margin-right: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  section.clause h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: -0.005em;
+    margin-top: 24px;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  section.clause p {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  section.clause ul,
+  section.clause ol.inner {
+    margin: 12px 0 20px 22px;
+  }
+  section.clause li {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  section.clause strong { color: var(--ink); font-weight: 600; }
+
+  /* Contact box */
+  .contact-box {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 20px;
+    padding: 36px 36px;
+    margin-top: 48px;
+  }
+  .contact-box h2 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 26px;
+    margin-bottom: 14px;
+    color: var(--cream);
+  }
+  .contact-box p {
+    color: rgba(255, 245, 240, 0.75);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 6px;
+  }
+  .contact-box a {
+    color: var(--coral);
+    border-bottom-color: rgba(255, 107, 71, 0.4);
+  }
+  .contact-box strong { color: var(--cream); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  footer .meta { font-size: 13px; color: var(--muted); }
+  footer .links {
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+  }
+  footer .links a { color: var(--muted); border: none; }
+  footer .links a:hover { color: var(--coral); }
+
+  @media (max-width: 720px) {
+    nav { padding: 16px 20px; }
+    .logo-icon { width: 32px; height: 32px; border-radius: 8px; }
+    .logo-icon span { font-size: 18px; }
+    .logo-icon::after { top: 6px; right: 6px; }
+    .logo-text { font-size: 22px; }
+    .back-link { font-size: 13px; }
+    main.legal { padding: 50px 20px 80px; }
+    h1 { font-size: 34px; }
+    .updated { font-size: 13px; }
+    .toc { padding: 22px 24px; margin-bottom: 44px; }
+    .toc ol { columns: 1; }
+    section.clause { margin-bottom: 40px; }
+    section.clause h2 { font-size: 24px; }
+    section.clause p, section.clause li { font-size: 15px; }
+    .contact-box { padding: 28px 24px; }
+    .contact-box h2 { font-size: 22px; }
+    footer { padding: 32px 20px; flex-direction: column; text-align: center; gap: 16px; }
+    footer .links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-icon"><span>K</span></div>
+    <div class="logo-text">allo</div>
+  </a>
+  <a href="/" class="back-link">← Grįžti į pradžią</a>
+</nav>
+
+<main class="legal">
+  <header class="doc-header">
+    <div class="eyebrow">Teisė</div>
+    <h1>Paslaugų teikimo sąlygos</h1>
+    <p class="updated">Paskutinį kartą atnaujinta: 2026 m. balandžio 10 d.</p>
+  </header>
+
+  <div class="toc">
+    <h2>Turinys</h2>
+    <ol>
+      <li><a href="#paslauga">Paslaugos aprašymas</a></li>
+      <li><a href="#paskyra">Paskyros registracija</a></li>
+      <li><a href="#mokejimas">Mokėjimas ir planai</a></li>
+      <li><a href="#atsisakymas">Atsisakymas ir grąžinimas</a></li>
+      <li><a href="#naudojimas">Priimtinas naudojimas</a></li>
+      <li><a href="#jusu-turinys">Jūsų turinys ir duomenys</a></li>
+      <li><a href="#intelektine">Intelektinė nuosavybė</a></li>
+      <li><a href="#prieinamumas">Paslaugos prieinamumas</a></li>
+      <li><a href="#atsakomybe">Atsakomybės ribojimas</a></li>
+      <li><a href="#nutraukimas">Sutarties nutraukimas</a></li>
+      <li><a href="#gincai">Ginčų sprendimas</a></li>
+      <li><a href="#pakeitimai">Sąlygų pakeitimai</a></li>
+      <li><a href="#kontaktai">Kontaktai</a></li>
+    </ol>
+  </div>
+
+  <section class="clause" id="paslauga">
+    <h2><span class="num">01</span>Paslaugos aprašymas</h2>
+    <p><strong>Kallo</strong> (toliau — „Paslauga", „mes") yra dirbtinio intelekto pokalbių roboto programinė įranga, kurią klientas įsidiegia į savo verslo svetainę. Kallo atsako į lankytojų klausimus iš kliento svetainės turinio ir padeda sukurti rezervacijas, kurios sinchronizuojamos su kliento Google Kalendoriumi.</p>
+    <p>Šios sąlygos reglamentuoja jūsų (toliau — „Klientas", „Jūs") ir Kallo santykius naudojant Paslaugą. Registruodamiesi Kallo platformoje ir pradėdami naudotis Paslauga, Jūs sutinkate su šiomis sąlygomis.</p>
+  </section>
+
+  <section class="clause" id="paskyra">
+    <h2><span class="num">02</span>Paskyros registracija</h2>
+    <p>Norėdami naudotis Kallo, turite užsiregistruoti ir pateikti tikslią informaciją apie save ir savo verslą:</p>
+    <ul>
+      <li>veikiantį el. pašto adresą;</li>
+      <li>verslo pavadinimą ir svetainės adresą;</li>
+      <li>kontaktinį telefono numerį (neprivaloma).</li>
+    </ul>
+    <p>Jūs esate atsakingas už savo paskyros slaptažodžio saugumą ir už visus veiksmus, atliekamus per Jūsų paskyrą. Jei įtariate, kad paskyra pažeista — nedelsdami informuokite mus el. paštu <a href="mailto:labas@kallo.lt">labas@kallo.lt</a>.</p>
+    <p>Registruotis gali tik <strong>18 metų ir vyresni</strong> asmenys, veikiantys savo ar atstovaujamos įmonės vardu.</p>
+  </section>
+
+  <section class="clause" id="mokejimas">
+    <h2><span class="num">03</span>Mokėjimas ir planai</h2>
+    <p>Kallo siūlo šiuos planus:</p>
+    <ul>
+      <li><strong>Starto (€0/mėn)</strong> — iki 50 pokalbių per mėnesį, 1 svetainė, pagrindinės funkcijos;</li>
+      <li><strong>Pro (€29/mėn)</strong> — neriboti pokalbiai, Google Kalendoriaus integracija, SMS patvirtinimai, prioritetinis palaikymas;</li>
+      <li><strong>Biznio (€49/mėn)</strong> — viskas iš Pro, iki 5 svetainių, komandos valdymas, asmeninis onboarding.</li>
+    </ul>
+    <p>Mokėjimus apdoroja <strong>Stripe</strong>. Mokesčiai skaičiuojami kas mėnesį arba kasmet (priklausomai nuo Jūsų pasirinkimo) ir automatiškai nurašomi iš Jūsų nurodytos mokėjimo priemonės.</p>
+    <p>Visos kainos pateiktos <strong>be PVM</strong>, kuris pridedamas pagal Lietuvos Respublikos teisės aktus (21%).</p>
+    <p>Jei nemokate laiku, Paslauga gali būti apribota arba laikinai sustabdyta, kol bus sumokėta.</p>
+  </section>
+
+  <section class="clause" id="atsisakymas">
+    <h2><span class="num">04</span>Atsisakymas ir grąžinimas</h2>
+    <p>Galite atšaukti savo prenumeratą bet kuriuo metu per savo Kallo valdymo skydelį arba parašydami mums el. paštu. Atšaukus prenumeratą:</p>
+    <ul>
+      <li>Paslauga bus prieinama iki einamojo mokėjimo laikotarpio pabaigos;</li>
+      <li>Pinigai už neišnaudotą laikotarpio dalį <strong>negrąžinami</strong>;</li>
+      <li>Pro ir Biznio planams siūlome <strong>14 dienų nemokamą bandymą</strong> naujiems klientams — šiuo laikotarpiu galite atsisakyti be jokių mokesčių.</li>
+    </ul>
+    <p>Jei nesate patenkinti Paslauga per pirmąsias 30 dienų, susisiekite su mumis — stengsimės išspręsti problemą arba, jei to padaryti negalima, grąžinti pinigus pagal kiekvieną atvejį atskirai.</p>
+  </section>
+
+  <section class="clause" id="naudojimas">
+    <h2><span class="num">05</span>Priimtinas naudojimas</h2>
+    <p>Naudodamiesi Kallo sutinkate <strong>nenaudoti</strong> Paslaugos šiems tikslams:</p>
+    <ul>
+      <li>spamui, masinio siuntimo kampanijoms ar nepageidautinam rinkodaros turiniui;</li>
+      <li>neteisėtos, klaidinančios, apgaulingos ar žalingos veiklos;</li>
+      <li>autorių teisių, prekių ženklų ar kitų intelektinės nuosavybės teisių pažeidimams;</li>
+      <li>asmens duomenų rinkimui be tinkamo teisinio pagrindo;</li>
+      <li>bandymams apeiti, reverse-engineer'inti ar pažeisti Kallo saugumo priemones;</li>
+      <li>tokio apkrovimo, kuris galėtų sutrikdyti Paslaugos veikimą kitiems naudotojams;</li>
+      <li>reklamuoti alkoholiui, tabakui, azartiniams lošimams, ginklams ar kitoms Lietuvoje draudžiamoms prekėms/paslaugoms.</li>
+    </ul>
+    <p>Pažeidus šias taisykles, mes turime teisę be įspėjimo apriboti arba nutraukti Jūsų paskyrą ir, reikiamais atvejais, pranešti atitinkamoms institucijoms.</p>
+  </section>
+
+  <section class="clause" id="jusu-turinys">
+    <h2><span class="num">06</span>Jūsų turinys ir duomenys</h2>
+    <p><strong>Jums priklauso visi Jūsų klientų ir verslo duomenys</strong>. Kallo niekada netampa Jūsų duomenų savininku, neparduoda jų ir nenaudoja rinkodarai. Mes tik apdorojame duomenis tiek, kiek būtina Paslaugai teikti.</p>
+    <p>Jūs suteikiate mums <strong>ribotą, neprivilegijuotą licenciją</strong> saugoti ir apdoroti Jūsų pateiktą turinį (svetainės tekstą, paslaugų aprašymus, kainas) tik tam, kad Kallo galėtų atsakinėti Jūsų klientams ir sukurti rezervacijas.</p>
+    <p>Detales apie asmens duomenų tvarkymą rasite mūsų <a href="/privatumas.html">Privatumo politikoje</a>.</p>
+  </section>
+
+  <section class="clause" id="intelektine">
+    <h2><span class="num">07</span>Intelektinė nuosavybė</h2>
+    <p>Visos Kallo programinės įrangos, dizaino, logo, prekės ženklo ir dokumentacijos teisės priklauso <strong>Kallo komandai</strong>. Naudodamiesi Paslauga Jūs negaunate jokių teisių į mūsų intelektinę nuosavybę, išskyrus teisę naudotis Paslauga pagal šias sąlygas.</p>
+    <p>Draudžiama:</p>
+    <ul>
+      <li>kopijuoti, modifikuoti ar platinti Kallo programinę įrangą be mūsų raštiško leidimo;</li>
+      <li>naudoti Kallo logo ar prekės ženklą rinkodarai be atskiro susitarimo;</li>
+      <li>kurti konkuruojančias paslaugas, pagrįstas Kallo kodu ar dizainu.</li>
+    </ul>
+  </section>
+
+  <section class="clause" id="prieinamumas">
+    <h2><span class="num">08</span>Paslaugos prieinamumas</h2>
+    <p>Stengiamės užtikrinti, kad Kallo veiktų <strong>99,9 % laiko</strong>, tačiau negarantuojame, kad Paslauga bus visada prieinama be trikčių. Paslauga gali būti laikinai nepasiekiama dėl:</p>
+    <ul>
+      <li>planinio techninio aptarnavimo (apie kurį informuosime iš anksto);</li>
+      <li>force majeure aplinkybių (stichinės nelaimės, karas, didelės DDoS atakos);</li>
+      <li>trečiųjų šalių paslaugų (Netlify, Stripe, Anthropic) trikčių;</li>
+      <li>saugumo incidentų, kuriems reikia skubių veiksmų.</li>
+    </ul>
+    <p>Jei Paslauga neveikia ilgiau nei <strong>24 valandas be pertraukos</strong> dėl mūsų kaltės, Jums galime suteikti proporcingą mėnesio mokesčio kreditą — parašykite mums, ir mes susitvarkysime.</p>
+  </section>
+
+  <section class="clause" id="atsakomybe">
+    <h2><span class="num">09</span>Atsakomybės ribojimas</h2>
+    <p>Kallo yra AI įrankis — jis nėra tobulas. Galime stengtis užtikrinti tikslumą, bet <strong>negarantuojame</strong>, kad Kallo visuomet duos 100 % teisingus atsakymus. Galutinis atsakomybės už kliento aptarnavimą centras — Jūs, verslo savininkas.</p>
+    <p>Mūsų bendra atsakomybė pagal šias sąlygas neviršys <strong>sumos, kurią mokėjote už Paslaugą per paskutinius 12 mėnesių</strong>, ir bet kuriuo atveju neviršys <strong>€500</strong>.</p>
+    <p>Kallo nėra atsakingas už:</p>
+    <ul>
+      <li>netiesioginę, atsitiktinę ar pasekminę žalą;</li>
+      <li>pajamų, klientų ar reputacijos praradimą;</li>
+      <li>žalą, atsiradusią dėl Jūsų netinkamo Paslaugos naudojimo;</li>
+      <li>trečiųjų šalių (pvz., Google, Stripe) paslaugų trikčių poveikį.</li>
+    </ul>
+  </section>
+
+  <section class="clause" id="nutraukimas">
+    <h2><span class="num">10</span>Sutarties nutraukimas</h2>
+    <p><strong>Jūs galite nutraukti</strong> sutartį bet kuriuo metu, atšaukdami prenumeratą savo Kallo skydelyje arba parašydami mums el. paštu.</p>
+    <p><strong>Mes galime nutraukti</strong> arba apriboti Jūsų prieigą, jei:</p>
+    <ul>
+      <li>pažeidėte šias sąlygas;</li>
+      <li>nemokate už Paslaugą ilgiau nei 14 dienų po termino pabaigos;</li>
+      <li>Jūsų veikla kenkia mums ar kitiems Paslaugos naudotojams;</li>
+      <li>nusprendžiame nutraukti Paslaugą visuomenei (šiuo atveju informuosime iš anksto bent prieš 30 dienų).</li>
+    </ul>
+    <p>Po sutarties nutraukimo Jūs turite 30 dienų eksportuoti savo duomenis. Vėliau Jūsų duomenys bus ištrinti pagal <a href="/privatumas.html">Privatumo politikoje</a> numatytus terminus.</p>
+  </section>
+
+  <section class="clause" id="gincai">
+    <h2><span class="num">11</span>Ginčų sprendimas</h2>
+    <p>Šioms sąlygoms ir bet kokiam ginčui, kylančiam iš Paslaugos naudojimo, taikoma <strong>Lietuvos Respublikos teisė</strong>.</p>
+    <p>Jei atsiranda ginčas, pirmiausia sieksime jį išspręsti <strong>derybomis</strong>. Jei tai nepavyksta, ginčas bus sprendžiamas Lietuvos Respublikos kompetentinguose teismuose pagal jurisdikcijos taisykles.</p>
+    <p>Vartotojai taip pat turi teisę naudotis <strong>elektronine ginčų sprendimo platforma</strong>, prieinama <a href="https://ec.europa.eu/consumers/odr">ec.europa.eu/consumers/odr</a>.</p>
+  </section>
+
+  <section class="clause" id="pakeitimai">
+    <h2><span class="num">12</span>Sąlygų pakeitimai</h2>
+    <p>Šias sąlygas galime kartkartėmis atnaujinti. Apie esminius pakeitimus pranešime el. paštu likus bent <strong>14 dienų</strong> iki jų įsigaliojimo. Tęsdami Paslaugos naudojimą po pakeitimų įsigaliojimo, Jūs patvirtinate, kad sutinkate su naująja versija.</p>
+    <p>Paskutinio atnaujinimo data visuomet rodoma dokumento viršuje.</p>
+  </section>
+
+  <section class="clause" id="kontaktai">
+    <h2><span class="num">13</span>Kontaktai</h2>
+    <p>Bet kokiu klausimu dėl šių sąlygų arba Paslaugos naudojimo, rašykite mums:</p>
+    <div class="contact-box">
+      <h2>Kallo</h2>
+      <p><strong>El. paštas:</strong> <a href="mailto:labas@kallo.lt">labas@kallo.lt</a></p>
+      <p><strong>Paslaugų klausimai:</strong> <a href="mailto:pagalba@kallo.lt">pagalba@kallo.lt</a></p>
+      <p><strong>Svetainė:</strong> <a href="https://kallo.lt">kallo.lt</a></p>
+      <p style="margin-top: 14px;">Atsakome per darbo valandas — dažniausiai per kelias valandas.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="meta">© 2026 Kallo · Sukurta Vilniuje</div>
+  <div class="links">
+    <a href="/">Pradžia</a>
+    <a href="/privatumas.html">Privatumas</a>
+    <a href="/salygos.html">Sąlygos</a>
+    <a href="mailto:labas@kallo.lt">labas@kallo.lt</a>
+  </div>
+</footer>
+
+</body>
+</html>

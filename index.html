@@ -1850,12 +1850,22 @@
 
     /* Features */
     .features, .steps, .pricing, .testimonials, .stats { grid-template-columns: 1fr; }
-    .features { gap: 16px; }
-    .feature { padding: 28px 24px; border-radius: 18px; }
-    .feature-icon { width: 56px; height: 56px; margin-bottom: 20px; }
-    .feature-icon svg { width: 32px; height: 32px; }
-    .feature h3 { font-size: 21px; margin-bottom: 10px; }
-    .feature p { font-size: 14px; }
+    .features { gap: 14px; }
+    #funkcijos.block { padding: 70px 20px; }
+    #funkcijos .block-header { margin-bottom: 40px; }
+    .feature {
+      padding: 24px 22px;
+      border-radius: 16px;
+    }
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      margin-bottom: 18px;
+      border-radius: 14px;
+    }
+    .feature-icon svg { width: 30px; height: 30px; }
+    .feature h3 { font-size: 20px; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .feature p { font-size: 14px; line-height: 1.6; }
 
     /* How it works */
     .how-section { padding: 80px 20px; }
@@ -2218,6 +2228,59 @@
       <h3>Ataskaitos kasdien</h3>
       <p>Rytinė ataskaita SMS ar el. paštu — kiek pokalbių, kiek rezervacijų, ką klientai dažniausiai klausia.</p>
     </div>
+
+    <!-- Feature 7: Multi-language globe -->
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="14" stroke="#1A0A00" stroke-width="2"/>
+          <ellipse cx="20" cy="20" rx="6" ry="14" stroke="#1A0A00" stroke-width="1.6"/>
+          <line x1="6" y1="20" x2="34" y2="20" stroke="#1A0A00" stroke-width="1.6"/>
+          <path d="M 8 13 Q 20 10 32 13" stroke="#1A0A00" stroke-width="1.4" fill="none"/>
+          <path d="M 8 27 Q 20 30 32 27" stroke="#1A0A00" stroke-width="1.4" fill="none"/>
+          <circle cx="20" cy="20" r="2.5" fill="#FF6B47">
+            <animate attributeName="r" values="2;3;2" dur="2.4s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      </div>
+      <h3>Daugiakalbis palaikymas</h3>
+      <p>Anglų, rusų, lenkų ir dar 20 kalbų. Užsieniečiams Vilniuje rezervuoti tampa lengviau nei kada nors — Kallo atsako jų gimtąja kalba.</p>
+    </div>
+
+    <!-- Feature 8: Auto-sync -->
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 8 20 A 12 12 0 0 1 30 14" stroke="#1A0A00" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M 32 20 A 12 12 0 0 1 10 26" stroke="#FF6B47" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M 26 10 L 32 14 L 28 19" stroke="#1A0A00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M 14 30 L 8 26 L 12 21" stroke="#FF6B47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="8s" repeatCount="indefinite"/>
+            <circle cx="32" cy="20" r="1.5" fill="#FF6B47"/>
+          </g>
+        </svg>
+      </div>
+      <h3>Auto-sinchronizacija</h3>
+      <p>Pakeitėte kainą ar pridėjote naują paslaugą svetainėje? Kallo iškart atnaujina žinias. Jokių rankinių pakeitimų.</p>
+    </div>
+
+    <!-- Feature 9: Staff calendars -->
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="13" cy="15" r="5" stroke="#1A0A00" stroke-width="2"/>
+          <path d="M 5 32 Q 5 24 13 24 Q 21 24 21 32" stroke="#1A0A00" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <circle cx="27" cy="14" r="4" stroke="#FF6B47" stroke-width="2"/>
+          <path d="M 21 30 Q 21 22 27 22 Q 33 22 33 30" stroke="#FF6B47" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <circle cx="34" cy="10" r="2" fill="#FF6B47">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      </div>
+      <h3>Darbuotojų kalendoriai</h3>
+      <p>Kiekvienas meistras turi savo grafiką. Klientai mato tik pasirinkto meistro laisvus laikus, o rezervacija patenka į jo asmeninį Google Kalendorių.</p>
+    </div>
   </div>
 </section>
 
@@ -2568,8 +2631,8 @@
   </a>
   <div class="footer-meta">© 2026 Kallo · Sukurta Vilniuje</div>
   <div class="footer-links">
-    <a href="#">Privatumas</a>
-    <a href="#">Sąlygos</a>
+    <a href="/privatumas.html">Privatumas</a>
+    <a href="/salygos.html">Sąlygos</a>
     <a href="mailto:labas@kallo.lt">labas@kallo.lt</a>
   </div>
 </footer>
