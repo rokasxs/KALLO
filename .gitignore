@@ -1,0 +1,19 @@
+# Local dev/preview config
+.claude/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor state
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (for future)
+node_modules/
+.env
+.env.local
+*.log

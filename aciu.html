@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ačiū — Kallo</title>
+<meta name="description" content="Jūsų užklausa gauta. Susisieksime per 24 valandas." />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="theme-color" content="#1A0A00" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --coral: #FF6B47;
+    --ink: #1A0A00;
+    --blush: #FFF5F0;
+    --pale: #FFD5C8;
+    --cream: #FFFCFA;
+    --green: #1D9E75;
+    --muted: #6B5B52;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(255, 107, 71, 0.14), transparent 60%);
+    transform: translate(-50%, -50%);
+    filter: blur(80px);
+    pointer-events: none;
+    animation: pulse 6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 1;
+  }
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--ink);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .logo-icon span {
+    font-family: 'DM Serif Display', serif;
+    color: var(--cream);
+    font-weight: 400;
+    font-size: 22px;
+    transform: translateX(-1px);
+  }
+  .logo-icon::after {
+    content: '';
+    position: absolute;
+    top: 7px; right: 7px;
+    width: 6px; height: 6px;
+    background: var(--coral);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(255, 107, 71, 0.7);
+    animation: dot 2.2s infinite;
+  }
+  @keyframes dot {
+    0% { box-shadow: 0 0 0 0 rgba(255, 107, 71, 0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(255, 107, 71, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 107, 71, 0); }
+  }
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 26px;
+    letter-spacing: -0.03em;
+  }
+  .check {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--coral);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 36px;
+    box-shadow: 0 20px 50px -15px rgba(255, 107, 71, 0.5);
+    animation: popIn 0.6s cubic-bezier(0.2, 1.2, 0.4, 1);
+    position: relative;
+    z-index: 1;
+  }
+  @keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .check svg { width: 42px; height: 42px; }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: clamp(40px, 5vw, 60px);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--coral);
+  }
+  p.lead {
+    font-size: 18px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 520px;
+    margin: 0 auto 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 30px;
+    background: var(--ink);
+    color: var(--cream);
+    text-decoration: none;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 15px;
+    transition: background 0.2s, transform 0.2s;
+    position: relative;
+    z-index: 1;
+  }
+  .back:hover {
+    background: var(--coral);
+    transform: translateY(-2px);
+  }
+  .footer-note {
+    margin-top: 60px;
+    font-size: 13px;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+  }
+  .footer-note a {
+    color: var(--coral);
+    text-decoration: none;
+    border-bottom: 1px solid var(--pale);
+  }
+</style>
+</head>
+<body>
+  <a href="/" class="logo">
+    <div class="logo-icon"><span>K</span></div>
+    <div class="logo-text">allo</div>
+  </a>
+  <div class="check">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </div>
+  <h1>Ačiū! <em>Gavome jūsų užklausą.</em></h1>
+  <p class="lead">Susisieksime per 24 valandas el. paštu ir parodysime, kaip Kallo veiks jūsų salone. Tikriausiai jums neprireiks nieko daryti — tiesiog laukite mūsų žinutės.</p>
+  <a href="/" class="back">← Grįžti į pradžią</a>
+  <div class="footer-note">
+    Turite klausimą? <a href="mailto:labas@kallo.lt">labas@kallo.lt</a>
+  </div>
+</body>
+</html>
