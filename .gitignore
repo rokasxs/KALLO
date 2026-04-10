@@ -1,6 +1,10 @@
 # Local dev/preview config
 .claude/
 
+# Private docs (not for public deploy)
+OUTREACH.md
+og-template.html
+
 # OS cruft
 .DS_Store
 Thumbs.db
