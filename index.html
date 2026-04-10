@@ -1841,18 +1841,18 @@
     .ticker { gap: 40px; }
     .ticker-item { font-size: 18px; }
 
-    /* Section padding */
+    /* Section padding — tight on mobile to reduce white space between sections */
     section.block, .how-section, .testimonials-section, .calendar-showcase, .faq-section {
-      padding: 80px 20px;
+      padding: 56px 20px;
     }
-    .block-header { margin-bottom: 50px; }
+    .block-header { margin-bottom: 40px; }
     .block-header p { font-size: 16px; }
 
     /* Features */
     .features, .steps, .pricing, .testimonials, .stats { grid-template-columns: 1fr; }
     .features { gap: 14px; }
-    #funkcijos.block { padding: 70px 20px; }
-    #funkcijos .block-header { margin-bottom: 40px; }
+    #funkcijos.block { padding: 48px 20px; }
+    #funkcijos .block-header { margin-bottom: 32px; }
     .feature {
       padding: 24px 22px;
       border-radius: 16px;
@@ -1868,7 +1868,7 @@
     .feature p { font-size: 14px; line-height: 1.6; }
 
     /* How it works */
-    .how-section { padding: 80px 20px; }
+    .how-section { padding: 56px 20px; }
     .how-section::before, .how-section::after { width: 400px; height: 400px; }
     .steps { gap: 18px; }
     .step { padding: 20px; border-radius: 16px; }
@@ -1880,11 +1880,11 @@
     .step:not(:last-child)::before { display: none; }
 
     /* Stats */
-    .stats { gap: 32px; padding: 60px 20px; }
+    .stats { gap: 28px; padding: 44px 20px; }
     .stat .num { font-size: 48px; }
 
     /* Calendar showcase */
-    .calendar-showcase { padding: 80px 20px; }
+    .calendar-showcase { padding: 56px 20px; }
     .calendar-showcase::before { width: 400px; height: 400px; right: -20%; }
     .showcase-inner { grid-template-columns: 1fr; gap: 40px; }
     .showcase-text h2 { font-size: 34px; line-height: 1.2; }
@@ -1932,7 +1932,7 @@
     .testimonial-quote { font-size: 15px; }
 
     /* FAQ */
-    .faq-section { padding: 80px 20px; }
+    .faq-section { padding: 56px 20px; }
     .faq-list { max-width: 100%; }
     .faq-question {
       font-size: 17px;
@@ -1946,7 +1946,7 @@
     .faq-answer p { font-size: 14px; line-height: 1.65; }
 
     /* Final CTA — critical form fix */
-    .final-cta { padding: 60px 20px; }
+    .final-cta { padding: 44px 20px 60px; }
     .final-cta-card { padding: 50px 24px; border-radius: 24px; }
     .final-cta-card h2 { font-size: 36px; line-height: 1.15; }
     .final-cta-card p { font-size: 15px; margin-bottom: 28px; }
