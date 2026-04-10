@@ -1795,31 +1795,200 @@
   @media (max-width: 960px) {
     nav { padding: 16px 20px; }
     .nav-links { display: none; }
+    nav { padding: 14px 20px; }
+    nav.scrolled { padding: 12px 20px; }
+    .logo-icon { width: 32px; height: 32px; border-radius: 8px; }
+    .logo-icon span { font-size: 18px; }
+    .logo-icon::after { top: 6px; right: 6px; }
+    .logo-text { font-size: 22px; }
+    .nav-cta { padding: 9px 16px; font-size: 13px; }
+
+    /* Hero */
     .hero {
       grid-template-columns: 1fr;
-      padding: 130px 20px 70px;
-      gap: 50px;
+      padding: 120px 20px 60px;
+      gap: 40px;
     }
-    .hero h1 { font-size: 48px; }
-    .hero p.lead { font-size: 17px; }
-    section.block, .how-section, .testimonials-section, .calendar-showcase, .faq-section { padding: 80px 20px; }
-    .faq-question { font-size: 18px; padding: 22px 0; gap: 16px; }
-    .faq-icon { width: 28px; height: 28px; }
-    .faq-answer p { padding-right: 40px; font-size: 15px; }
+    .hero::before { width: 100%; left: 0; top: 80px; }
+    .hero-badge { font-size: 12px; padding: 6px 12px; margin-bottom: 22px; }
+    .hero h1 {
+      font-size: 38px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 22px;
+    }
+    .hero p.lead { font-size: 16px; line-height: 1.55; margin-bottom: 28px; }
+    .hero-ctas { flex-wrap: wrap; gap: 10px; }
+    .btn-primary { padding: 14px 24px; font-size: 14px; }
+    .btn-secondary { padding: 14px 18px; font-size: 14px; }
+    .hero-meta { gap: 14px; font-size: 12px; flex-wrap: wrap; }
+
+    /* Chat demo */
+    .chat-demo { border-radius: 18px; }
+    .chat-header { padding: 14px 16px; }
+    .chat-header .avatar { width: 32px; height: 32px; font-size: 14px; }
+    .chat-header h4 { font-size: 14px; }
+    .chat-header p { font-size: 11px; }
+    .chat-body { height: 300px; padding: 16px; }
+    .msg { font-size: 13px; padding: 9px 14px; }
+    .chat-input { padding: 12px 14px; }
+    .chat-input input { font-size: 13px; }
+    .chat-input button { width: 30px; height: 30px; font-size: 14px; }
+
+    /* Ticker */
+    .ticker-section { padding: 36px 0; }
+    .ticker-label { font-size: 11px; margin-bottom: 18px; }
+    .ticker { gap: 40px; }
+    .ticker-item { font-size: 18px; }
+
+    /* Section padding */
+    section.block, .how-section, .testimonials-section, .calendar-showcase, .faq-section {
+      padding: 80px 20px;
+    }
+    .block-header { margin-bottom: 50px; }
+    .block-header p { font-size: 16px; }
+
+    /* Features */
     .features, .steps, .pricing, .testimonials, .stats { grid-template-columns: 1fr; }
-    .stats { gap: 40px; }
-    .showcase-inner { grid-template-columns: 1fr; gap: 50px; }
-    .cal-days-header { grid-template-columns: 38px repeat(5, 1fr); }
-    .cal-grid { grid-template-columns: 38px repeat(5, 1fr); }
-    .cal-now-line { left: 38px; }
-    .cal-day-label .date { font-size: 18px; }
-    .calendar-mock { animation: none; }
+    .features { gap: 16px; }
+    .feature { padding: 28px 24px; border-radius: 18px; }
+    .feature-icon { width: 56px; height: 56px; margin-bottom: 20px; }
+    .feature-icon svg { width: 32px; height: 32px; }
+    .feature h3 { font-size: 21px; margin-bottom: 10px; }
+    .feature p { font-size: 14px; }
+
+    /* How it works */
+    .how-section { padding: 80px 20px; }
+    .how-section::before, .how-section::after { width: 400px; height: 400px; }
+    .steps { gap: 18px; }
+    .step { padding: 20px; border-radius: 16px; }
+    .step-visual { height: 160px; margin-bottom: 20px; border-radius: 12px; }
+    .step-number { font-size: 10px; padding: 5px 10px; margin-bottom: 12px; }
+    .step h3 { font-size: 22px; margin-bottom: 8px; }
+    .step p { font-size: 14px; }
     .step:not(:last-child)::after,
     .step:not(:last-child)::before { display: none; }
-    .steps { gap: 20px; }
+
+    /* Stats */
+    .stats { gap: 32px; padding: 60px 20px; }
+    .stat .num { font-size: 48px; }
+
+    /* Calendar showcase */
+    .calendar-showcase { padding: 80px 20px; }
+    .calendar-showcase::before { width: 400px; height: 400px; right: -20%; }
+    .showcase-inner { grid-template-columns: 1fr; gap: 40px; }
+    .showcase-text h2 { font-size: 34px; line-height: 1.2; }
+    .showcase-text p.lead { font-size: 15px; }
+    .showcase-list li { font-size: 14px; }
+    .calendar-mock { animation: none; border-radius: 16px; }
+    .cal-header { padding: 14px 16px; }
+    .cal-brand { font-size: 12px; }
+    .cal-brand svg { width: 18px; height: 18px; }
+    .cal-nav { font-size: 11px; gap: 6px; }
+    .cal-nav-btn { width: 22px; height: 22px; font-size: 14px; }
+    .cal-days-header { grid-template-columns: 32px repeat(5, 1fr); }
+    .cal-grid { grid-template-columns: 32px repeat(5, 1fr); }
+    .cal-now-line { left: 32px; }
+    .cal-day-label { padding: 10px 2px 12px; gap: 3px; }
+    .cal-day-label .dow { font-size: 9px; }
+    .cal-day-label .date { font-size: 16px; }
+    .cal-day-label.today .date { width: 26px; height: 26px; font-size: 13px; }
+    .cal-hour { height: 48px; font-size: 9px; padding: 0 4px; }
+    .cal-day-col { min-height: 384px; }
+    .cal-day-col::before {
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 47px,
+        rgba(26, 10, 0, 0.05) 47px,
+        rgba(26, 10, 0, 0.05) 48px
+      );
+    }
+    .cal-event { left: 2px; right: 2px; padding: 4px 5px; border-radius: 4px; }
+    .cal-event .ev-time { font-size: 9px; margin-bottom: 1px; }
+    .cal-event .ev-title { font-size: 9.5px; line-height: 1.2; }
+    .cal-event .ev-badge { font-size: 7.5px; margin-top: 2px; letter-spacing: 0.05em; }
+
+    /* Pricing */
+    .pricing { gap: 16px; }
+    .plan { padding: 32px 24px; border-radius: 18px; }
     .plan.featured { transform: none; }
-    .final-cta-card { padding: 60px 24px; }
-    footer { flex-direction: column; text-align: center; }
+    .plan .price { font-size: 48px; }
+    .plan .price .currency { font-size: 24px; }
+
+    /* Testimonials */
+    .testimonials { gap: 16px; }
+    .testimonial { padding: 26px 22px; }
+    .testimonial-quote { font-size: 15px; }
+
+    /* FAQ */
+    .faq-section { padding: 80px 20px; }
+    .faq-list { max-width: 100%; }
+    .faq-question {
+      font-size: 17px;
+      padding: 22px 0;
+      gap: 14px;
+      line-height: 1.3;
+    }
+    .faq-icon { width: 28px; height: 28px; flex-shrink: 0; }
+    .faq-icon::before, .faq-icon::after { width: 11px; }
+    .faq-answer-inner { padding: 0 0 24px 0; }
+    .faq-answer p { font-size: 14px; line-height: 1.65; }
+
+    /* Final CTA — critical form fix */
+    .final-cta { padding: 60px 20px; }
+    .final-cta-card { padding: 50px 24px; border-radius: 24px; }
+    .final-cta-card h2 { font-size: 36px; line-height: 1.15; }
+    .final-cta-card p { font-size: 15px; margin-bottom: 28px; }
+    .final-cta-card form {
+      flex-direction: column;
+      background: transparent;
+      border: none;
+      padding: 0;
+      max-width: 100%;
+      gap: 12px;
+      border-radius: 0;
+    }
+    .final-cta-card input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 213, 200, 0.2);
+      border-radius: 100px;
+      padding: 15px 22px;
+      font-size: 15px;
+      text-align: center;
+    }
+    .final-cta-card form button {
+      width: 100%;
+      padding: 15px 28px;
+      font-size: 14px;
+    }
+
+    /* Footer */
+    footer {
+      flex-direction: column;
+      text-align: center;
+      padding: 48px 20px 32px;
+      gap: 20px;
+    }
+    footer .footer-links { gap: 20px; flex-wrap: wrap; justify-content: center; }
+  }
+
+  /* Extra-small phones (iPhone SE, old Androids) */
+  @media (max-width: 380px) {
+    .hero h1 { font-size: 34px; }
+    .block-header h2 { font-size: 28px !important; }
+    .showcase-text h2 { font-size: 30px; }
+    .final-cta-card h2 { font-size: 32px; }
+    .hero p.lead { font-size: 15px; }
+    .feature { padding: 24px 20px; }
+    .step { padding: 18px 16px; }
+    .plan { padding: 28px 20px; }
+    .testimonial { padding: 22px 18px; }
+    .cal-brand { font-size: 11px; }
+    .cal-brand svg { width: 16px; height: 16px; }
+    .cal-nav span { font-size: 10px; }
+    .stat .num { font-size: 42px; }
   }
 </style>
 </head>
