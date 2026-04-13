@@ -448,39 +448,7 @@
     transition: transform 0.2s, background 0.2s;
     flex-shrink: 0;
   }
-  .chat-input button:hover { transform: scale(1.08); }
-  .chat-input.active {
-    animation: inputGlow 1.5s ease;
-  }
-  @keyframes inputGlow {
-    0% { box-shadow: 0 0 0 0 rgba(255, 107, 71, 0); }
-    30% { box-shadow: 0 0 0 4px rgba(255, 107, 71, 0.25); }
-    100% { box-shadow: none; }
-  }
-  .chat-input.active input {
-    color: var(--ink);
-  }
-  .try-hint {
-    align-self: center;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--coral);
-    padding: 8px 16px;
-    background: rgba(255, 107, 71, 0.08);
-    border: 1px solid rgba(255, 107, 71, 0.15);
-    border-radius: 100px;
-    animation: hintPulse 2s ease-in-out infinite, hintFadeIn 0.5s ease;
-    cursor: default;
-    margin-top: 4px;
-  }
-  @keyframes hintPulse {
-    0%, 100% { opacity: 0.85; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.02); }
-  }
-  @keyframes hintFadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 0.85; transform: translateY(0); }
-  }
+  .chat-input button { flex-shrink: 0; }
 
   /* ---------- Ticker ---------- */
   .ticker-section {
@@ -1831,6 +1799,279 @@
   }
   footer .footer-links a:hover { color: var(--coral); }
 
+  /* ---------- Floating chat widget ---------- */
+  .widget-wrap {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+    pointer-events: none;
+  }
+  .widget-wrap > * { pointer-events: auto; }
+
+  /* Bubble button */
+  .widget-bubble {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--coral);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 40px -10px rgba(255, 107, 71, 0.6), 0 4px 12px -4px rgba(26, 10, 0, 0.15);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .widget-bubble:hover {
+    transform: scale(1.08);
+    box-shadow: 0 16px 50px -10px rgba(255, 107, 71, 0.7), 0 6px 16px -4px rgba(26, 10, 0, 0.2);
+  }
+  .widget-bubble svg {
+    width: 28px;
+    height: 28px;
+    transition: transform 0.3s;
+  }
+  .widget-bubble.open svg { transform: rotate(90deg) scale(0.9); }
+  .widget-bubble .close-x {
+    display: none;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1;
+  }
+  .widget-bubble.open svg { display: none; }
+  .widget-bubble.open .close-x { display: block; }
+
+  /* Try-me badge */
+  .widget-badge {
+    position: absolute;
+    right: 72px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 100px;
+    box-shadow: 0 8px 24px -8px rgba(26, 10, 0, 0.3);
+    animation: badgePulse 3s ease-in-out infinite;
+    pointer-events: none;
+    letter-spacing: -0.01em;
+  }
+  .widget-badge::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background: var(--ink);
+    border-radius: 2px;
+  }
+  @keyframes badgePulse {
+    0%, 100% { opacity: 0.95; transform: translateY(-50%) translateX(0); }
+    50% { opacity: 1; transform: translateY(-50%) translateX(-4px); }
+  }
+  .widget-badge.hidden { display: none; }
+
+  /* Chat panel */
+  .widget-panel {
+    width: 380px;
+    max-height: 540px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 30px 80px -20px rgba(26, 10, 0, 0.35), 0 10px 30px -10px rgba(26, 10, 0, 0.15), 0 0 0 1px var(--border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform-origin: bottom right;
+    transform: scale(0.6) translateY(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.4s cubic-bezier(0.2, 1.2, 0.3, 1), opacity 0.3s ease, visibility 0s 0.4s;
+  }
+  .widget-panel.open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    visibility: visible;
+    transition: transform 0.4s cubic-bezier(0.2, 1.2, 0.3, 1), opacity 0.3s ease, visibility 0s;
+  }
+  .widget-panel .w-header {
+    background: var(--ink);
+    color: white;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .widget-panel .w-avatar {
+    width: 38px;
+    height: 38px;
+    background: var(--coral);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 20px;
+    color: white;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .widget-panel .w-avatar::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 10px;
+    height: 10px;
+    background: var(--green);
+    border-radius: 50%;
+    border: 2px solid var(--ink);
+  }
+  .widget-panel .w-info h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: -0.01em;
+  }
+  .widget-panel .w-info p {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .widget-panel .w-powered {
+    margin-left: auto;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.35);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .widget-panel .w-body {
+    flex: 1;
+    padding: 18px;
+    overflow-y: auto;
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 300px;
+    max-height: 360px;
+  }
+  .widget-panel .w-body .msg {
+    max-width: 82%;
+    padding: 11px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .widget-panel .w-body .msg.show { opacity: 1; transform: translateY(0); }
+  .widget-panel .w-body .msg.user {
+    background: var(--ink);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+  }
+  .widget-panel .w-body .msg.bot {
+    background: white;
+    color: var(--ink);
+    align-self: flex-start;
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 5px;
+    white-space: pre-line;
+  }
+  .widget-panel .w-body .typing {
+    display: inline-flex;
+    gap: 4px;
+    padding: 14px 18px;
+    background: white;
+    border-radius: 18px;
+    border-bottom-left-radius: 5px;
+    align-self: flex-start;
+    border: 1px solid var(--border);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .widget-panel .w-body .typing.show { opacity: 1; }
+  .widget-panel .w-body .typing span {
+    width: 6px;
+    height: 6px;
+    background: var(--muted);
+    border-radius: 50%;
+    animation: typing 1.2s infinite;
+  }
+  .widget-panel .w-body .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .widget-panel .w-body .typing span:nth-child(3) { animation-delay: 0.4s; }
+  .widget-panel .w-input {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    flex-shrink: 0;
+  }
+  .widget-panel .w-input input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: transparent;
+    min-width: 0;
+  }
+  .widget-panel .w-input input::placeholder { color: var(--muted); }
+  .widget-panel .w-input button {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--coral);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .widget-panel .w-input button:hover { transform: scale(1.08); }
+
+  /* Mobile widget */
+  @media (max-width: 960px) {
+    .widget-wrap { bottom: 18px; right: 18px; gap: 10px; }
+    .widget-bubble { width: 56px; height: 56px; }
+    .widget-bubble svg { width: 24px; height: 24px; }
+    .widget-badge { right: 64px; font-size: 12px; padding: 8px 14px; }
+    .widget-panel {
+      width: calc(100vw - 24px);
+      max-height: 70vh;
+      border-radius: 16px;
+      position: fixed;
+      bottom: 84px;
+      right: 12px;
+    }
+    .widget-panel .w-body { min-height: 250px; max-height: 50vh; }
+  }
+
   /* ---------- Reveal on scroll ---------- */
   .reveal {
     opacity: 0;
@@ -2115,9 +2356,9 @@
       </div>
     </div>
     <div class="chat-body" id="chat-body"></div>
-    <div class="chat-input" id="chat-input-bar">
-      <input type="text" id="chat-input" placeholder="Rašyti žinutę..." disabled />
-      <button id="chat-send" aria-label="Siųsti">→</button>
+    <div class="chat-input">
+      <input type="text" placeholder="Rašyti žinutę..." disabled />
+      <button disabled>→</button>
     </div>
   </div>
 </section>
@@ -2695,6 +2936,34 @@
   </div>
 </footer>
 
+<!-- Floating chat widget -->
+<div class="widget-wrap">
+  <div class="widget-panel" id="widget-panel">
+    <div class="w-header">
+      <div class="w-avatar">K</div>
+      <div class="w-info">
+        <h4>Studio Aura</h4>
+        <p>Kallo asistentas · Online</p>
+      </div>
+      <span class="w-powered">Powered by Kallo</span>
+    </div>
+    <div class="w-body" id="widget-body"></div>
+    <div class="w-input">
+      <input type="text" id="widget-input" placeholder="Užduokite klausimą..." />
+      <button id="widget-send" aria-label="Siųsti">→</button>
+    </div>
+  </div>
+  <div style="position: relative;">
+    <div class="widget-badge hidden">Išbandykite Kallo ✨</div>
+    <button class="widget-bubble" aria-label="Atidaryti Kallo pokalbį">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span class="close-x">×</span>
+    </button>
+  </div>
+</div>
+
 <script>
   // ---------- Staggered word reveal in hero headline ----------
   (function() {
@@ -2776,185 +3045,13 @@
   }, { threshold: 0.5 });
   document.querySelectorAll('.stat .num').forEach(el => statsIO.observe(el));
 
-  // ---------- Interactive chat demo ----------
+  // ---------- Hero chat auto-play (non-interactive, loops forever) ----------
   (function() {
+    if (new URLSearchParams(location.search).has('static')) return;
     const chatBody = document.getElementById('chat-body');
-    const chatInput = document.getElementById('chat-input');
-    const chatSend = document.getElementById('chat-send');
-    const chatBar = document.getElementById('chat-input-bar');
-    if (!chatBody || !chatInput) return;
+    if (!chatBody) return;
 
-    // ---- Studio Aura knowledge base ----
-    const STUDIO = {
-      name: 'Studio Aura',
-      address: 'Gedimino pr. 28, Vilnius',
-      phone: '+370 612 34567',
-      hours: {
-        pirmadienis: '9:00–19:00',
-        antradienis: '9:00–19:00',
-        trečiadienis: '9:00–19:00',
-        ketvirtadienis: '9:00–19:00',
-        penktadienis: '9:00–19:00',
-        šeštadienis: '10:00–18:00',
-        sekmadienis: 'Nedirbame'
-      },
-      services: [
-        { name: 'Moteriškas kirpimas', price: 25, dur: 45 },
-        { name: 'Vyriškas kirpimas', price: 18, dur: 30 },
-        { name: 'Dažymas', price: 45, dur: 90 },
-        { name: 'Manikiūras', price: 20, dur: 45 },
-        { name: 'Pedikiūras', price: 25, dur: 60 },
-        { name: 'Antakių korekcija', price: 12, dur: 20 },
-        { name: 'Plaukų laminavimas', price: 35, dur: 60 }
-      ]
-    };
-
-    // ---- Response engine ----
-    function norm(s) {
-      return s.toLowerCase()
-        .replace(/[ąa]/g, 'a').replace(/[čc]/g, 'c').replace(/[ęe]/g, 'e')
-        .replace(/[ėe]/g, 'e').replace(/[įi]/g, 'i').replace(/[šs]/g, 's')
-        .replace(/[ųu]/g, 'u').replace(/[ūu]/g, 'u').replace(/[žz]/g, 'z')
-        .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
-    }
-
-    function match(input, keywords) {
-      const n = norm(input);
-      return keywords.some(k => n.includes(k));
-    }
-
-    function getResponse(raw) {
-      const n = norm(raw);
-
-      // Greeting
-      if (match(raw, ['labas', 'sveiki', 'laba diena', 'hey', 'hello', 'hi'])) {
-        return 'Labas! 👋 Esu Studio Aura virtualus asistentas. Galiu atsakyti apie paslaugas, kainas ir darbo laiką, arba padėti rezervuoti vizitą. Kuo galiu padėti?';
-      }
-
-      // Hours — specific day
-      const days = [
-        { keys: ['pirmadie', 'monday'], day: 'pirmadienis' },
-        { keys: ['antradien', 'tuesday'], day: 'antradienis' },
-        { keys: ['treciadien', 'wednesday'], day: 'trečiadienis' },
-        { keys: ['ketvirtadien', 'thursday'], day: 'ketvirtadienis' },
-        { keys: ['penktadien', 'friday'], day: 'penktadienis' },
-        { keys: ['sestadien', 'saturday'], day: 'šeštadienis' },
-        { keys: ['sekmadien', 'sekmadie', 'sunday'], day: 'sekmadienis' }
-      ];
-      for (const d of days) {
-        if (d.keys.some(k => n.includes(k))) {
-          const h = STUDIO.hours[d.day];
-          if (h === 'Nedirbame') return 'Deja, ' + d.day.charAt(0).toUpperCase() + d.day.slice(1).toLowerCase() + ' nedirbame. Artimiausia darbo diena — pirmadienis nuo 9:00. Ar norėtumėte rezervuoti kitą dieną?';
-          return d.day.charAt(0).toUpperCase() + d.day.slice(1) + ' dirbame ' + h + '. Ar norėtumėte užsirezervuoti laiką?';
-        }
-      }
-
-      // Hours — general
-      if (match(raw, ['darbo laik', 'valand', 'kada dirb', 'working hours', 'atidar', 'uzdar'])) {
-        let r = 'Mūsų darbo laikas:\n';
-        for (const [day, h] of Object.entries(STUDIO.hours)) {
-          r += day.charAt(0).toUpperCase() + day.slice(1) + ': ' + h + '\n';
-        }
-        return r.trim();
-      }
-
-      // Specific service price
-      for (const s of STUDIO.services) {
-        const sn = norm(s.name);
-        const words = sn.split(' ');
-        if (words.some(w => w.length > 3 && n.includes(w))) {
-          return s.name + ' — ' + s.price + ' €, trukmė ~' + s.dur + ' min. Ar norėtumėte rezervuoti?';
-        }
-      }
-
-      // General price list
-      if (match(raw, ['kain', 'price', 'kiek kainuo', 'paslaug', 'meniu', 'sarasa'])) {
-        let r = 'Mūsų kainos:\n';
-        STUDIO.services.forEach(s => { r += '• ' + s.name + ' — ' + s.price + ' €\n'; });
-        r += '\nAr domina kuri nors paslauga?';
-        return r;
-      }
-
-      // Booking intent
-      if (match(raw, ['rezervuo', 'uzsisakyt', 'uzsiregistruo', 'noriu', 'uzsirasyt', 'booking', 'book', 'registruo'])) {
-        let r = 'Puiku! Kokią paslaugą norėtumėte?\n';
-        STUDIO.services.forEach(s => { r += '• ' + s.name + ' (' + s.price + ' €)\n'; });
-        r += '\nParašykite paslaugą ir pageidaujamą dieną — rezervuosiu!';
-        return r;
-      }
-
-      // Location
-      if (match(raw, ['adres', 'kur jus', 'kur ras', 'lokacij', 'vieta', 'location', 'where'])) {
-        return 'Mūsų adresas: ' + STUDIO.address + '. Lengva rasti — prie pat Gedimino prospekto, antrame aukšte. 📍';
-      }
-
-      // Parking
-      if (match(raw, ['parkav', 'parking', 'masina', 'automobil'])) {
-        return 'Šalia yra mokama parkavimo aikštelė Totorių gatvėje (~2 €/val.). Taip pat galima pasinaudoti CityBee ar Bolt vietomis netoliese.';
-      }
-
-      // Payment
-      if (match(raw, ['mokejim', 'kortele', 'gryni', 'payment', 'card', 'cash', 'apple pay'])) {
-        return 'Priimame mokėjimus grynais ir kortele (Visa, Mastercard). Taip pat veikia Apple Pay ir Google Pay. 💳';
-      }
-
-      // Cancellation
-      if (match(raw, ['atsaukt', 'atsisakyt', 'cancel', 'perkelt'])) {
-        return 'Vizitą galite atšaukti arba perkelti nemokamai likus bent 4 valandoms. Jei reikia keisti — tiesiog parašykite čia arba skambinkite ' + STUDIO.phone + '.';
-      }
-
-      // Contact / phone
-      if (match(raw, ['telefon', 'skambint', 'kontakt', 'numer', 'phone', 'call'])) {
-        return 'Galite mus pasiekti telefonu: ' + STUDIO.phone + '. Taip pat galite rašyti čia — atsakysiu iš karto! 📞';
-      }
-
-      // Language
-      if (match(raw, ['kalb', 'english', 'russian', 'anglis', 'rusis', 'lenkis', 'language'])) {
-        return 'Kalbame lietuviškai ir angliškai. Jei reikia — galiu bendrauti ir anglų kalba! 🌍';
-      }
-
-      // Thanks
-      if (match(raw, ['aciu', 'dekui', 'thanks', 'thank'])) {
-        return 'Prašom! 😊 Jei turėsite daugiau klausimų — drąsiai rašykite. Geros dienos!';
-      }
-
-      // Goodbye
-      if (match(raw, ['viso', 'iki', 'bye', 'sudie', 'ate'])) {
-        return 'Iki pasimatymo! 👋 Laukiame jūsų Studio Aura!';
-      }
-
-      // What is Kallo
-      if (match(raw, ['kallo', 'kas tu', 'kas esi', 'robot', 'ai', 'dirbtini'])) {
-        return 'Esu Kallo — dirbtinio intelekto asistentas, sukurtas padėti Studio Aura klientams. Galiu atsakyti į klausimus apie paslaugas, kainas ir darbo laiką, bei padėti rezervuoti vizitą. Viską darau automatiškai 24/7! 🤖';
-      }
-
-      // Fallback
-      return 'Atsiprašau, negaliu tiksliai atsakyti į šį klausimą. Palikite savo vardą ir telefono numerį — Studio Aura savininkas susisieks su jumis per valandą. Arba skambinkite: ' + STUDIO.phone;
-    }
-
-    // ---- Shared helpers ----
-    function appendMsg(m) {
-      const div = document.createElement('div');
-      div.className = 'msg ' + m.who;
-      div.textContent = m.text;
-      chatBody.appendChild(div);
-      setTimeout(() => div.classList.add('show'), 15);
-      chatBody.scrollTop = chatBody.scrollHeight;
-      return div;
-    }
-
-    function showTyping() {
-      const t = document.createElement('div');
-      t.className = 'typing';
-      t.innerHTML = '<span></span><span></span><span></span>';
-      chatBody.appendChild(t);
-      setTimeout(() => t.classList.add('show'), 15);
-      chatBody.scrollTop = chatBody.scrollHeight;
-      return t;
-    }
-
-    // ---- Phase 1: Auto-play scripted demo ----
-    const demoScript = [
+    const script = [
       { who: 'user', text: 'Labas! Ar dirbate šeštadienį?' },
       { who: 'bot', text: 'Labas! Taip, šeštadieniais dirbame 10:00–18:00. Ar norėtumėte užsirezervuoti laiką?', delay: 1400 },
       { who: 'user', text: 'Kiek kainuoja kirpimas?' },
@@ -2963,127 +3060,51 @@
       { who: 'bot', text: '✓ Rezervuota! Šeštadienis, 14:00, moteriškas kirpimas. Gausite SMS patvirtinimą.', delay: 1500 }
     ];
 
-    let interactiveMode = false;
+    function appendMsg(m) {
+      const div = document.createElement('div');
+      div.className = 'msg ' + m.who;
+      div.textContent = m.text;
+      chatBody.appendChild(div);
+      setTimeout(() => div.classList.add('show'), 15);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function showTyping() {
+      const t = document.createElement('div');
+      t.className = 'typing';
+      t.innerHTML = '<span></span><span></span><span></span>';
+      chatBody.appendChild(t);
+      setTimeout(() => t.classList.add('show'), 15);
+      return t;
+    }
 
     async function playScript() {
-      for (let i = 0; i < demoScript.length; i++) {
-        if (interactiveMode) return; // abort if user started typing early
-        const m = demoScript[i];
+      for (const m of script) {
         if (m.who === 'bot') {
           const t = showTyping();
           await new Promise(r => setTimeout(r, m.delay || 1200));
-          if (interactiveMode) { t.remove(); return; }
           t.remove();
         } else {
           await new Promise(r => setTimeout(r, 600));
-          if (interactiveMode) return;
         }
         appendMsg(m);
         await new Promise(r => setTimeout(r, m.who === 'bot' ? 1500 : 800));
       }
     }
 
-    // ---- Phase 2: Enable interactive mode ----
-    function enableInteractive() {
-      if (interactiveMode) return;
-      interactiveMode = true;
-
-      // Show "try it" hint
-      const hint = document.createElement('div');
-      hint.className = 'try-hint';
-      hint.textContent = '↑ Išbandykite patys — užduokite klausimą';
-      chatBody.appendChild(hint);
-      setTimeout(() => hint.classList.add('show'), 15);
-      chatBody.scrollTop = chatBody.scrollHeight;
-
-      // Remove hint after 6s or on first interaction
-      const removeHint = () => { if (hint.parentNode) hint.remove(); };
-      setTimeout(removeHint, 6000);
-      chatInput.addEventListener('focus', removeHint, { once: true });
-
-      // Enable input
-      chatInput.disabled = false;
-      chatInput.placeholder = 'Užduokite klausimą...';
-      chatBar.classList.add('active');
-
-      // Scroll chat into view on mobile
-      if (window.innerWidth <= 960) {
-        chatBody.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
-
-    // ---- Send user message + get response ----
-    let responding = false;
-    async function sendMessage() {
-      const text = chatInput.value.trim();
-      if (!text || responding) return;
-      responding = true;
-      chatInput.value = '';
-
-      // Remove hint if still present
-      const hint = chatBody.querySelector('.try-hint');
-      if (hint) hint.remove();
-
-      // Append user message
-      appendMsg({ who: 'user', text: text });
-
-      // Show typing indicator with randomized delay (800–1400ms)
-      const t = showTyping();
-      const delay = 800 + Math.random() * 600;
-      await new Promise(r => setTimeout(r, delay));
-      t.remove();
-
-      // Get response and show
-      const response = getResponse(text);
-      appendMsg({ who: 'bot', text: response });
-      responding = false;
-
-      // Focus input for next message
-      chatInput.focus();
-    }
-
-    // ---- Event listeners ----
-    chatSend.addEventListener('click', () => {
-      if (!interactiveMode) {
-        enableInteractive();
-        return;
-      }
-      sendMessage();
-    });
-
-    chatInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-
-    // Allow clicking on chat body to enable interactive mode early
-    chatBody.addEventListener('click', () => {
-      if (!interactiveMode) enableInteractive();
-    });
-
-    // Prevent body scroll when scrolling inside chat
-    chatBody.addEventListener('wheel', (e) => {
-      const atTop = chatBody.scrollTop <= 0;
-      const atBottom = chatBody.scrollTop + chatBody.clientHeight >= chatBody.scrollHeight;
-      if ((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atBottom)) return;
-      e.stopPropagation();
-    }, { passive: true });
-
-    // ---- Start ----
-    if (!new URLSearchParams(location.search).has('static')) {
-      setTimeout(async () => {
+    async function loop() {
+      while (true) {
+        chatBody.innerHTML = '';
+        await new Promise(r => setTimeout(r, 800));
         await playScript();
-        // After script finishes, wait 2s then enable interactive
-        if (!interactiveMode) {
-          await new Promise(r => setTimeout(r, 2000));
-          enableInteractive();
-        }
-      }, 1500);
+        await new Promise(r => setTimeout(r, 3500));
+      }
     }
+
+    setTimeout(loop, 1500);
   })();
 
+  // (old interactive code removed — now lives in the floating widget IIFE below)
   // ---------- Calendar showcase demo ----------
   (function() {
     if (new URLSearchParams(location.search).has('static')) return;
@@ -3331,6 +3352,160 @@
         else openItem(item);
       });
     });
+  })();
+
+  // ---------- Floating chat widget ----------
+  (function() {
+    if (new URLSearchParams(location.search).has('static')) return;
+
+    // ---- Studio Aura knowledge base (shared) ----
+    const STUDIO = {
+      name: 'Studio Aura',
+      address: 'Gedimino pr. 28, Vilnius',
+      phone: '+370 612 34567',
+      hours: {
+        pirmadienis: '9:00–19:00', antradienis: '9:00–19:00', trečiadienis: '9:00–19:00',
+        ketvirtadienis: '9:00–19:00', penktadienis: '9:00–19:00',
+        šeštadienis: '10:00–18:00', sekmadienis: 'Nedirbame'
+      },
+      services: [
+        { name: 'Moteriškas kirpimas', price: 25, dur: 45 },
+        { name: 'Vyriškas kirpimas', price: 18, dur: 30 },
+        { name: 'Dažymas', price: 45, dur: 90 },
+        { name: 'Manikiūras', price: 20, dur: 45 },
+        { name: 'Pedikiūras', price: 25, dur: 60 },
+        { name: 'Antakių korekcija', price: 12, dur: 20 },
+        { name: 'Plaukų laminavimas', price: 35, dur: 60 }
+      ]
+    };
+
+    function norm(s) {
+      return s.toLowerCase()
+        .replace(/[ąa]/g,'a').replace(/[čc]/g,'c').replace(/[ęe]/g,'e')
+        .replace(/[ėe]/g,'e').replace(/[įi]/g,'i').replace(/[šs]/g,'s')
+        .replace(/[ųu]/g,'u').replace(/[ūu]/g,'u').replace(/[žz]/g,'z')
+        .replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+    }
+    function match(input, kws) { const n = norm(input); return kws.some(k => n.includes(k)); }
+
+    function getResponse(raw) {
+      const n = norm(raw);
+      if (match(raw,['labas','sveiki','laba diena','hey','hello','hi']))
+        return 'Labas! 👋 Esu Studio Aura virtualus asistentas. Galiu atsakyti apie paslaugas, kainas ir darbo laiką, arba padėti rezervuoti vizitą. Kuo galiu padėti?';
+      const days = [
+        {keys:['pirmadie','monday'],day:'pirmadienis'},{keys:['antradien','tuesday'],day:'antradienis'},
+        {keys:['treciadien','wednesday'],day:'trečiadienis'},{keys:['ketvirtadien','thursday'],day:'ketvirtadienis'},
+        {keys:['penktadien','friday'],day:'penktadienis'},{keys:['sestadien','saturday'],day:'šeštadienis'},
+        {keys:['sekmadien','sekmadie','sunday'],day:'sekmadienis'}
+      ];
+      for (const d of days) {
+        if (d.keys.some(k => n.includes(k))) {
+          const h = STUDIO.hours[d.day];
+          if (h === 'Nedirbame') return 'Deja, ' + d.day.charAt(0).toUpperCase() + d.day.slice(1) + ' nedirbame. Artimiausia darbo diena — pirmadienis nuo 9:00. Ar norėtumėte rezervuoti kitą dieną?';
+          return d.day.charAt(0).toUpperCase() + d.day.slice(1) + ' dirbame ' + h + '. Ar norėtumėte užsirezervuoti laiką?';
+        }
+      }
+      if (match(raw,['darbo laik','valand','kada dirb','working hours','atidar','uzdar'])) {
+        let r = 'Mūsų darbo laikas:\n'; for (const [day, h] of Object.entries(STUDIO.hours)) r += day.charAt(0).toUpperCase() + day.slice(1) + ': ' + h + '\n'; return r.trim();
+      }
+      for (const s of STUDIO.services) {
+        const words = norm(s.name).split(' ');
+        if (words.some(w => w.length > 3 && n.includes(w))) return s.name + ' — ' + s.price + ' €, trukmė ~' + s.dur + ' min. Ar norėtumėte rezervuoti?';
+      }
+      if (match(raw,['kain','price','kiek kainuo','paslaug','meniu','sarasa'])) {
+        let r = 'Mūsų kainos:\n'; STUDIO.services.forEach(s => { r += '• ' + s.name + ' — ' + s.price + ' €\n'; }); r += '\nAr domina kuri nors paslauga?'; return r;
+      }
+      if (match(raw,['rezervuo','uzsisakyt','uzsiregistruo','noriu','uzsirasyt','booking','book','registruo'])) {
+        let r = 'Puiku! Kokią paslaugą norėtumėte?\n'; STUDIO.services.forEach(s => { r += '• ' + s.name + ' (' + s.price + ' €)\n'; }); r += '\nParašykite paslaugą ir pageidaujamą dieną — rezervuosiu!'; return r;
+      }
+      if (match(raw,['adres','kur jus','kur ras','lokacij','vieta','location','where'])) return 'Mūsų adresas: ' + STUDIO.address + '. Lengva rasti — prie pat Gedimino prospekto, antrame aukšte. 📍';
+      if (match(raw,['parkav','parking','masina','automobil'])) return 'Šalia yra mokama parkavimo aikštelė Totorių gatvėje (~2 €/val.). Taip pat galima pasinaudoti CityBee ar Bolt vietomis netoliese.';
+      if (match(raw,['mokejim','kortele','gryni','payment','card','cash','apple pay'])) return 'Priimame mokėjimus grynais ir kortele (Visa, Mastercard). Taip pat veikia Apple Pay ir Google Pay. 💳';
+      if (match(raw,['atsaukt','atsisakyt','cancel','perkelt'])) return 'Vizitą galite atšaukti arba perkelti nemokamai likus bent 4 valandoms. Jei reikia keisti — tiesiog parašykite čia arba skambinkite ' + STUDIO.phone + '.';
+      if (match(raw,['telefon','skambint','kontakt','numer','phone','call'])) return 'Galite mus pasiekti telefonu: ' + STUDIO.phone + '. Taip pat galite rašyti čia — atsakysiu iš karto! 📞';
+      if (match(raw,['kalb','english','russian','anglis','rusis','lenkis','language'])) return 'Kalbame lietuviškai ir angliškai. Jei reikia — galiu bendrauti ir anglų kalba! 🌍';
+      if (match(raw,['aciu','dekui','thanks','thank'])) return 'Prašom! 😊 Jei turėsite daugiau klausimų — drąsiai rašykite. Geros dienos!';
+      if (match(raw,['viso','iki','bye','sudie','ate'])) return 'Iki pasimatymo! 👋 Laukiame jūsų Studio Aura!';
+      if (match(raw,['kallo','kas tu','kas esi','robot','ai','dirbtini'])) return 'Esu Kallo — dirbtinio intelekto asistentas, sukurtas padėti Studio Aura klientams. Galiu atsakyti į klausimus apie paslaugas, kainas ir darbo laiką, bei padėti rezervuoti vizitą. Viską darau automatiškai 24/7! 🤖';
+      return 'Atsiprašau, negaliu tiksliai atsakyti į šį klausimą. Palikite savo vardą ir telefono numerį — Studio Aura savininkas susisieks su jumis per valandą. Arba skambinkite: ' + STUDIO.phone;
+    }
+
+    // ---- Widget DOM ----
+    const bubble = document.querySelector('.widget-bubble');
+    const badge = document.querySelector('.widget-badge');
+    const panel = document.querySelector('.widget-panel');
+    const wBody = document.getElementById('widget-body');
+    const wInput = document.getElementById('widget-input');
+    const wSend = document.getElementById('widget-send');
+    if (!bubble || !panel || !wBody || !wInput) return;
+
+    let isOpen = false;
+    let responding = false;
+
+    function toggleWidget() {
+      isOpen = !isOpen;
+      bubble.classList.toggle('open', isOpen);
+      panel.classList.toggle('open', isOpen);
+      if (badge) badge.classList.add('hidden');
+      if (isOpen) {
+        setTimeout(() => wInput.focus(), 400);
+        // Show welcome message on first open
+        if (wBody.children.length === 0) {
+          appendWidgetMsg({ who: 'bot', text: 'Labas! 👋 Esu Studio Aura asistentas. Užduokite bet kokį klausimą apie paslaugas, kainas ar darbo laiką — arba rezervuokite vizitą!' });
+        }
+      }
+    }
+
+    function appendWidgetMsg(m) {
+      const div = document.createElement('div');
+      div.className = 'msg ' + m.who;
+      div.textContent = m.text;
+      wBody.appendChild(div);
+      setTimeout(() => div.classList.add('show'), 15);
+      wBody.scrollTop = wBody.scrollHeight;
+      return div;
+    }
+
+    function showWidgetTyping() {
+      const t = document.createElement('div');
+      t.className = 'typing';
+      t.innerHTML = '<span></span><span></span><span></span>';
+      wBody.appendChild(t);
+      setTimeout(() => t.classList.add('show'), 15);
+      wBody.scrollTop = wBody.scrollHeight;
+      return t;
+    }
+
+    async function sendWidgetMessage() {
+      const text = wInput.value.trim();
+      if (!text || responding) return;
+      responding = true;
+      wInput.value = '';
+      appendWidgetMsg({ who: 'user', text: text });
+      const t = showWidgetTyping();
+      const delay = 800 + Math.random() * 600;
+      await new Promise(r => setTimeout(r, delay));
+      t.remove();
+      appendWidgetMsg({ who: 'bot', text: getResponse(text) });
+      responding = false;
+      wInput.focus();
+    }
+
+    // Events
+    bubble.addEventListener('click', toggleWidget);
+    wSend.addEventListener('click', sendWidgetMessage);
+    wInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendWidgetMessage(); }
+    });
+
+    // Scroll isolation
+    wBody.addEventListener('wheel', (e) => { e.stopPropagation(); }, { passive: true });
+    wBody.addEventListener('touchmove', (e) => { e.stopPropagation(); }, { passive: true });
+
+    // Show badge after 3 seconds
+    setTimeout(() => { if (badge && !isOpen) badge.classList.remove('hidden'); }, 3000);
+    // Auto-hide badge after 12 seconds if not clicked
+    setTimeout(() => { if (badge) badge.classList.add('hidden'); }, 12000);
   })();
 </script>
 </body>
