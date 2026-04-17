@@ -167,7 +167,10 @@
     font-size: 14px;
     letter-spacing: -0.005em;
     transition: transform 0.2s, background 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
+  .nav-cta-short { display: none; }
   .nav-cta:hover { background: var(--coral); transform: translateY(-1px); }
 
   /* ---------- Hero ---------- */
@@ -2101,7 +2104,9 @@
     .logo-icon span { font-size: 18px; }
     .logo-icon::after { top: 6px; right: 6px; }
     .logo-text { font-size: 22px; }
-    .nav-cta { padding: 9px 16px; font-size: 13px; }
+    .nav-cta { padding: 9px 18px; font-size: 13px; }
+    .nav-cta-full { display: none; }
+    .nav-cta-short { display: inline; }
 
     /* Hero */
     .hero {
@@ -2316,7 +2321,7 @@
     <a href="#kainos">Kainos</a>
     <a href="#duk">DUK</a>
   </div>
-  <a href="#pradeti" class="nav-cta">Pradėti nemokamai</a>
+  <a href="#pradeti" class="nav-cta"><span class="nav-cta-full">Pradėti nemokamai</span><span class="nav-cta-short">Pradėti →</span></a>
 </nav>
 
 <!-- ========== HERO ========== -->
