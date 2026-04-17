@@ -2089,10 +2089,19 @@
     transform: translateY(24px);
     transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
-  .reveal-stagger.in > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
-  .reveal-stagger.in > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.15s; }
-  .reveal-stagger.in > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.25s; }
-  .reveal-stagger.in > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.35s; }
+  /* Catch-all: reveal every child when .in is added (handles any count) */
+  .reveal-stagger.in > * { opacity: 1; transform: translateY(0); }
+  /* Per-child stagger delays for a nice cascade */
+  .reveal-stagger.in > *:nth-child(1) { transition-delay: 0.05s; }
+  .reveal-stagger.in > *:nth-child(2) { transition-delay: 0.12s; }
+  .reveal-stagger.in > *:nth-child(3) { transition-delay: 0.19s; }
+  .reveal-stagger.in > *:nth-child(4) { transition-delay: 0.26s; }
+  .reveal-stagger.in > *:nth-child(5) { transition-delay: 0.33s; }
+  .reveal-stagger.in > *:nth-child(6) { transition-delay: 0.40s; }
+  .reveal-stagger.in > *:nth-child(7) { transition-delay: 0.47s; }
+  .reveal-stagger.in > *:nth-child(8) { transition-delay: 0.54s; }
+  .reveal-stagger.in > *:nth-child(9) { transition-delay: 0.61s; }
+  .reveal-stagger.in > *:nth-child(n+10) { transition-delay: 0.68s; }
 
   /* ---------- Mobile ---------- */
   @media (max-width: 960px) {
@@ -3020,6 +3029,7 @@
   });
 
   // ---------- Reveal on scroll ----------
+  const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -3027,8 +3037,30 @@
         io.unobserve(e.target);
       }
     });
-  }, { threshold: 0.15 });
-  document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
+  }, { threshold: 0.05, rootMargin: '0px 0px -5% 0px' });
+  revealEls.forEach(el => io.observe(el));
+  // Safety fallback: reveal any section the user has scrolled past (or that's in viewport)
+  // in case IntersectionObserver fails to fire (some webviews, reduced motion, etc.)
+  function forceRevealVisible() {
+    const vh = window.innerHeight;
+    revealEls.forEach(el => {
+      if (el.classList.contains('in')) return;
+      const r = el.getBoundingClientRect();
+      // If any part of the element is visible OR it's been scrolled past
+      if (r.top < vh && r.bottom > 0) {
+        el.classList.add('in');
+        io.unobserve(el);
+      }
+    });
+  }
+  // Run fallback on scroll + periodic safety checks
+  window.addEventListener('scroll', forceRevealVisible, { passive: true });
+  setTimeout(forceRevealVisible, 500);
+  setTimeout(forceRevealVisible, 1500);
+  // Final safety: after 4s, reveal everything regardless (nothing should still be hidden)
+  setTimeout(() => {
+    revealEls.forEach(el => el.classList.add('in'));
+  }, 4000);
 
   // ---------- Stats count up ----------
   const statsIO = new IntersectionObserver((entries) => {
