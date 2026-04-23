@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Kallo — Pokalbių robotas, kuris rezervuoja 24/7</title>
-<meta name="description" content="Kallo yra AI asistentas jūsų verslo svetainei. Atsako į klientų klausimus, rezervuoja vizitus ir dirba 24/7 — salonams, klinikoms, servisams ir bet kuriam verslui su vizitais." />
+<meta name="description" content="AI asistentas + sąrašas kallo.lt kataloge. Klientai randa jus per kallo.lt, o Kallo juos aptarnauja ir rezervuoja 24/7. Salonams, klinikoms, servisams ir bet kuriam verslui su vizitais." />
 <link rel="canonical" href="https://kallo.lt/" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
 <link rel="alternate icon" href="/favicon.svg?v=2" />
@@ -18,7 +18,7 @@
 <meta property="og:locale" content="lt_LT" />
 <meta property="og:url" content="https://kallo.lt/" />
 <meta property="og:title" content="Kallo — Pokalbių robotas, kuris rezervuoja 24/7" />
-<meta property="og:description" content="AI asistentas jūsų verslui. Atsako į klausimus, rezervuoja vizitus ir dirba 24/7 — salonams, klinikoms, servisams." />
+<meta property="og:description" content="AI asistentas + sąrašas kallo.lt kataloge. Klientai jus randa, Kallo juos aptarnauja — salonams, klinikoms, servisams." />
 <meta property="og:image" content="https://kallo.lt/og.png" />
 <meta property="og:image:secure_url" content="https://kallo.lt/og.png" />
 <meta property="og:image:type" content="image/png" />
@@ -29,7 +29,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Kallo — Pokalbių robotas, kuris rezervuoja 24/7" />
-<meta name="twitter:description" content="AI asistentas jūsų verslui. Atsako į klausimus, rezervuoja vizitus ir dirba 24/7 — salonams, klinikoms, servisams." />
+<meta name="twitter:description" content="AI asistentas + sąrašas kallo.lt kataloge. Klientai jus randa, Kallo juos aptarnauja — salonams, klinikoms, servisams." />
 <meta name="twitter:image" content="https://kallo.lt/og.png" />
 <meta name="twitter:image:alt" content="Kallo — AI asistentas verslui" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1363,6 +1363,237 @@
     animation: pulse 2s infinite;
   }
 
+  /* ---------- Directory / Marketplace showcase ---------- */
+  .directory-showcase {
+    padding: 140px 40px;
+    max-width: 1280px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .directory-showcase::before {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: -10%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle at center, rgba(255, 107, 71, 0.14), transparent 60%);
+    filter: blur(80px);
+    animation: drift 18s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .directory-showcase .inner {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 70px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .directory-text h2 {
+    font-size: clamp(36px, 4.4vw, 58px);
+    line-height: 1.28;
+    margin-bottom: 22px;
+  }
+  .directory-text h2 em {
+    font-family: 'DM Serif Display', ui-serif, Georgia, serif;
+    font-style: italic;
+    color: var(--coral);
+  }
+  .directory-text p.lead {
+    font-size: 18px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 28px;
+    max-width: 460px;
+  }
+  .dir-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .dir-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .dir-list li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--coral);
+    margin-top: 1px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .dir-footnote {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Marketplace mockup — browser showing kallo.lt/rasti */
+  .marketplace-mock {
+    background: white;
+    border-radius: 20px;
+    box-shadow:
+      0 50px 100px -40px rgba(26, 10, 0, 0.28),
+      0 20px 40px -20px rgba(26, 10, 0, 0.1),
+      0 0 0 1px var(--border);
+    overflow: hidden;
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    animation: floatCard 7s ease-in-out infinite;
+  }
+  .mp-browser-bar {
+    padding: 12px 16px;
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mp-dots { display: flex; gap: 5px; }
+  .mp-dots span { width: 10px; height: 10px; border-radius: 50%; }
+  .mp-dots span:nth-child(1) { background: #FF6B47; }
+  .mp-dots span:nth-child(2) { background: #FFBC42; }
+  .mp-dots span:nth-child(3) { background: #1D9E75; }
+  .mp-url {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 11px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+  .mp-url .lock { font-size: 9px; color: var(--green); }
+  .mp-body {
+    padding: 22px 22px 28px;
+    background: var(--cream);
+    min-height: 480px;
+  }
+  .mp-searchbar {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 11px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .mp-searchbar svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--muted); }
+  .mp-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .mp-filter {
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 500;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--ink);
+  }
+  .mp-filter.active {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+  .mp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .mp-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .mp-card:hover { transform: translateY(-3px); }
+  .mp-card.highlight {
+    box-shadow: 0 0 0 2px var(--coral), 0 8px 20px -8px rgba(255, 107, 71, 0.4);
+    animation: highlightPulse 2.8s ease-in-out infinite;
+  }
+  @keyframes highlightPulse {
+    0%, 100% { box-shadow: 0 0 0 2px var(--coral), 0 8px 20px -8px rgba(255, 107, 71, 0.35); }
+    50% { box-shadow: 0 0 0 2px var(--coral), 0 12px 28px -8px rgba(255, 107, 71, 0.55); }
+  }
+  .mp-photo {
+    height: 70px;
+    background: linear-gradient(135deg, var(--pale), var(--blush));
+    position: relative;
+  }
+  .mp-photo.v1 { background: linear-gradient(135deg, #FFD5C8, #FFF5F0); }
+  .mp-photo.v2 { background: linear-gradient(135deg, #E0E7E5, #F0F5F3); }
+  .mp-photo.v3 { background: linear-gradient(135deg, #1A0A00, #2B1A10); }
+  .mp-photo.v4 { background: linear-gradient(135deg, #FF6B47, #FFBC42); }
+  .mp-photo-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(26, 10, 0, 0.6);
+    color: white;
+    font-size: 8px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 100px;
+    letter-spacing: 0.04em;
+  }
+  .mp-photo.v3 .mp-photo-badge { background: rgba(255, 255, 255, 0.2); }
+  .mp-content {
+    padding: 10px 12px 12px;
+  }
+  .mp-title {
+    font-family: 'DM Serif Display', ui-serif, Georgia, serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 2px;
+    letter-spacing: -0.01em;
+  }
+  .mp-category {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .mp-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+  }
+  .mp-rating {
+    color: var(--coral);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .mp-rating-num { color: var(--ink); margin-left: 3px; }
+  .mp-price {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
   /* ---------- Stats ---------- */
   .stats {
     display: grid;
@@ -2198,6 +2429,23 @@
     .stats { gap: 28px; padding: 44px 20px; }
     .stat .num { font-size: 48px; }
 
+    /* Directory showcase */
+    .directory-showcase { padding: 56px 20px; }
+    .directory-showcase::before { width: 400px; height: 400px; left: -20%; }
+    .directory-showcase .inner { grid-template-columns: 1fr; gap: 40px; }
+    .directory-text h2 { font-size: 34px; line-height: 1.2; }
+    .directory-text p.lead { font-size: 15px; }
+    .dir-list li { font-size: 14px; }
+    .marketplace-mock { animation: none; border-radius: 16px; order: 2; }
+    .directory-text { order: 1; }
+    .mp-body { padding: 18px 18px 22px; min-height: auto; }
+    .mp-searchbar { font-size: 12px; padding: 10px 14px; }
+    .mp-filter { font-size: 10px; padding: 5px 10px; }
+    .mp-filters { gap: 6px; margin-bottom: 16px; }
+    .mp-title { font-size: 13px; }
+    .mp-photo { height: 60px; }
+    .mp-photo-badge { font-size: 7.5px; padding: 2px 5px; }
+
     /* Calendar showcase */
     .calendar-showcase { padding: 56px 20px; }
     .calendar-showcase::before { width: 400px; height: 400px; right: -20%; }
@@ -2326,7 +2574,7 @@
   </a>
   <div class="nav-links">
     <a href="#funkcijos">Funkcijos</a>
-    <a href="#kaip-veikia">Kaip veikia</a>
+    <a href="#katalogas">Katalogas</a>
     <a href="#kainos">Kainos</a>
     <a href="#duk">DUK</a>
   </div>
@@ -2336,14 +2584,14 @@
 <!-- ========== HERO ========== -->
 <section class="hero">
   <div>
-    <div class="hero-badge">Jau naudoja 12+ verslų Lietuvoje</div>
+    <div class="hero-badge">AI asistentas + sąrašas kallo.lt kataloge</div>
     <h1 id="hero-headline">
       Kiekvienas klientas<br>
-      <em>atsakytas.</em><br>
-      Net naktį.
+      <em>rastas.</em><br>
+      Ir atsakytas.
     </h1>
     <p class="lead">
-      Kallo yra AI asistentas jūsų verslo svetainei. Atsako į klientų klausimus, rezervuoja vizitus ir dirba 24/7 — salonams, klinikoms, servisams ir bet kuriam verslui.
+      Kallo yra du įrankiai už vieną prenumeratą: AI asistentas jūsų svetainei ir automatinis sąrašas kallo.lt kataloge, kur klientai jus randa patys. Visos rezervacijos — į jūsų kalendorių.
     </p>
     <div class="hero-ctas">
       <a href="#pradeti" class="btn-primary">
@@ -2548,22 +2796,20 @@
       <p>Rytinė ataskaita SMS ar el. paštu — kiek pokalbių, kiek rezervacijų, ką klientai dažniausiai klausia.</p>
     </div>
 
-    <!-- Feature 7: Multi-language globe -->
+    <!-- Feature 7: Listing on kallo.lt directory -->
     <div class="feature">
       <div class="feature-icon">
         <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="20" cy="20" r="14" stroke="#1A0A00" stroke-width="2"/>
-          <ellipse cx="20" cy="20" rx="6" ry="14" stroke="#1A0A00" stroke-width="1.6"/>
-          <line x1="6" y1="20" x2="34" y2="20" stroke="#1A0A00" stroke-width="1.6"/>
-          <path d="M 8 13 Q 20 10 32 13" stroke="#1A0A00" stroke-width="1.4" fill="none"/>
-          <path d="M 8 27 Q 20 30 32 27" stroke="#1A0A00" stroke-width="1.4" fill="none"/>
-          <circle cx="20" cy="20" r="2.5" fill="#FF6B47">
-            <animate attributeName="r" values="2;3;2" dur="2.4s" repeatCount="indefinite"/>
-          </circle>
+          <path d="M 20 6 C 14 6 10 10 10 16 C 10 22 20 34 20 34 C 20 34 30 22 30 16 C 30 10 26 6 20 6 Z" fill="#FF6B47" stroke="#FF6B47" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="20" cy="16" r="4" fill="#FFF5F0"/>
+          <ellipse cx="20" cy="35" rx="8" ry="1.8" fill="#FF6B47" fill-opacity="0.25">
+            <animate attributeName="rx" values="6;10;6" dur="2.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.3;0.1;0.3" dur="2.4s" repeatCount="indefinite"/>
+          </ellipse>
         </svg>
       </div>
-      <h3>Daugiakalbis palaikymas</h3>
-      <p>Anglų, rusų, lenkų ir dar 20 kalbų. Užsieniečiams Vilniuje rezervuoti tampa lengviau nei kada nors — Kallo atsako jų gimtąja kalba.</p>
+      <h3>Sąrašas kallo.lt kataloge</h3>
+      <p>Kiekvienas Kallo klientas gauna automatinį sąrašą kallo.lt žemėlapyje. Jūsų verslas atsiranda visur — svetainėje, mūsų kataloge ir Google paieškoje.</p>
     </div>
 
     <!-- Feature 8: Auto-sync -->
@@ -2584,21 +2830,28 @@
       <p>Pakeitėte kainą ar pridėjote naują paslaugą svetainėje? Kallo iškart atnaujina žinias. Jokių rankinių pakeitimų.</p>
     </div>
 
-    <!-- Feature 9: Staff calendars -->
+    <!-- Feature 9: Customers find you via kallo.lt -->
     <div class="feature">
       <div class="feature-icon">
         <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="13" cy="15" r="5" stroke="#1A0A00" stroke-width="2"/>
-          <path d="M 5 32 Q 5 24 13 24 Q 21 24 21 32" stroke="#1A0A00" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <circle cx="27" cy="14" r="4" stroke="#FF6B47" stroke-width="2"/>
-          <path d="M 21 30 Q 21 22 27 22 Q 33 22 33 30" stroke="#FF6B47" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <circle cx="34" cy="10" r="2" fill="#FF6B47">
-            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+          <circle cx="18" cy="18" r="11" stroke="#1A0A00" stroke-width="2"/>
+          <line x1="26" y1="26" x2="34" y2="34" stroke="#FF6B47" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="14" cy="15" r="1.6" fill="#FF6B47">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="22" cy="14" r="1.2" fill="#FF6B47">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" begin="0.3s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="19" cy="22" r="1.6" fill="#FF6B47">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" begin="0.6s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="14" cy="21" r="1.2" fill="#FF6B47">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" begin="0.9s" repeatCount="indefinite"/>
           </circle>
         </svg>
       </div>
-      <h3>Darbuotojų kalendoriai</h3>
-      <p>Kiekvienas meistras turi savo grafiką. Klientai mato tik pasirinkto meistro laisvus laikus, o rezervacija patenka į jo asmeninį Google Kalendorių.</p>
+      <h3>Klientai randa jus patys</h3>
+      <p>Žmonės ieškantys paslaugų Vilniuje, Kaune ar Klaipėdoje aptinka jus kallo.lt paieškoje ir rezervuoja tiesiai iš mūsų svetainės. Naujas klientų srautas be papildomos reklamos.</p>
     </div>
   </div>
 </section>
@@ -2683,9 +2936,9 @@
             </div>
           </div>
         </div>
-        <div class="step-number">03 — MIEGOKITE</div>
-        <h3>Kallo dirba už jus</h3>
-        <p>Klientai kalbasi su Kallo, rezervuoja laikus ir gauna patvirtinimus. Jūs tik skaitote ataskaitas.</p>
+        <div class="step-number">03 — KLIENTAI ATEINA</div>
+        <h3>Iš dviejų šaltinių</h3>
+        <p>Klientai rezervuoja tiek iš jūsų svetainės, tiek iš kallo.lt katalogo, kur ieškantys paslaugų jus randa. Visos rezervacijos — vienoje vietoje.</p>
       </div>
     </div>
   </div>
@@ -2754,6 +3007,98 @@
   </div>
 </section>
 
+<!-- ========== DIRECTORY / MARKETPLACE SHOWCASE ========== -->
+<section class="directory-showcase" id="katalogas">
+  <div class="inner">
+    <div class="marketplace-mock reveal">
+      <div class="mp-browser-bar">
+        <div class="mp-dots"><span></span><span></span><span></span></div>
+        <div class="mp-url"><span class="lock">🔒</span> kallo.lt/rasti</div>
+      </div>
+      <div class="mp-body">
+        <div class="mp-searchbar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Raskite paslaugą Vilniuje...
+        </div>
+        <div class="mp-filters">
+          <div class="mp-filter active">Visi</div>
+          <div class="mp-filter">Grožis</div>
+          <div class="mp-filter">Odontologija</div>
+          <div class="mp-filter">Automobiliai</div>
+          <div class="mp-filter">Teisė</div>
+        </div>
+        <div class="mp-grid">
+          <div class="mp-card highlight">
+            <div class="mp-photo v1">
+              <span class="mp-photo-badge">Atvira dabar</span>
+            </div>
+            <div class="mp-content">
+              <div class="mp-title">Studio Aura</div>
+              <div class="mp-category">Grožio salonas · Vilnius</div>
+              <div class="mp-meta">
+                <span class="mp-rating">★★★★★<span class="mp-rating-num">4.9</span></span>
+                <span class="mp-price">€18–45</span>
+              </div>
+            </div>
+          </div>
+          <div class="mp-card">
+            <div class="mp-photo v2">
+              <span class="mp-photo-badge">Atvira dabar</span>
+            </div>
+            <div class="mp-content">
+              <div class="mp-title">DentaVita</div>
+              <div class="mp-category">Odontologijos klinika</div>
+              <div class="mp-meta">
+                <span class="mp-rating">★★★★★<span class="mp-rating-num">4.8</span></span>
+                <span class="mp-price">€40–120</span>
+              </div>
+            </div>
+          </div>
+          <div class="mp-card">
+            <div class="mp-photo v3">
+              <span class="mp-photo-badge">Populiariausias</span>
+            </div>
+            <div class="mp-content">
+              <div class="mp-title">AutoPro Servisas</div>
+              <div class="mp-category">Auto servisas · Kaunas</div>
+              <div class="mp-meta">
+                <span class="mp-rating">★★★★☆<span class="mp-rating-num">4.6</span></span>
+                <span class="mp-price">€50–300</span>
+              </div>
+            </div>
+          </div>
+          <div class="mp-card">
+            <div class="mp-photo v4">
+              <span class="mp-photo-badge">Naujas</span>
+            </div>
+            <div class="mp-content">
+              <div class="mp-title">Relax Spa</div>
+              <div class="mp-category">SPA · Vilnius</div>
+              <div class="mp-meta">
+                <span class="mp-rating">★★★★★<span class="mp-rating-num">5.0</span></span>
+                <span class="mp-price">€30–80</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="directory-text reveal">
+      <div class="eyebrow">Katalogas</div>
+      <h2>Jūsų verslas <em>kallo.lt</em> kataloge — automatiškai.</h2>
+      <p class="lead">Kiekvienas Kallo klientas gauna laisvą sąrašą mūsų kataloge, kur žmonės ieško paslaugų Lietuvoje. Klientai jus randa, skaito apie jus, mato kainas ir rezervuoja — be jokio papildomo darbo jums.</p>
+      <ul class="dir-list">
+        <li>Pilnas verslo profilis su nuotraukomis ir paslaugomis</li>
+        <li>Rezervacija tiesiai iš kallo.lt (be atskiros sistemos)</li>
+        <li>Atsiliepimai ir įvertinimai nuo realių klientų</li>
+        <li>SEO optimizuotas puslapis kiekvienam verslui</li>
+        <li>Prioritetas paieškoje su Pro planu</li>
+      </ul>
+      <p class="dir-footnote">Be komisinių nuo svetainės rezervacijų. Iš kallo.lt — tik 8% už sėkmingas rezervacijas (Treatwell ima 20–30%).</p>
+    </div>
+  </div>
+</section>
+
 <!-- ========== STATS ========== -->
 <div class="stats reveal-stagger">
   <div class="stat">
@@ -2788,8 +3133,8 @@
       <p class="desc">Pradėkite be rizikos. Idealu išbandymui.</p>
       <ul>
         <li>50 pokalbių per mėnesį</li>
+        <li>Sąrašas kallo.lt kataloge</li>
         <li>1 svetainė</li>
-        <li>Lietuvių kalba</li>
         <li>Pagrindinės funkcijos</li>
       </ul>
       <button>Pradėti nemokamai</button>
@@ -2798,13 +3143,13 @@
       <div class="plan-tag">Populiariausias</div>
       <h3>Pro</h3>
       <div class="price"><span class="currency">€</span>29<span class="period">/mėn</span></div>
-      <p class="desc">Daugumai verslų to pakanka kiekvieną mėnesį.</p>
+      <p class="desc">AI asistentas + sąrašas kallo.lt kataloge. Viskas kas reikia.</p>
       <ul>
         <li>Neriboti pokalbiai</li>
+        <li>Prioritetinis sąrašas kallo.lt</li>
         <li>Google Kalendoriaus integracija</li>
         <li>SMS patvirtinimai klientams</li>
         <li>Kasdienės ataskaitos</li>
-        <li>Prioritetinis palaikymas</li>
       </ul>
       <button>Išbandyti 14 dienų nemokamai</button>
     </div>
@@ -2814,8 +3159,8 @@
       <p class="desc">Keliems filialams ar didelėms komandoms.</p>
       <ul>
         <li>Viskas iš Pro</li>
+        <li>Populiarumo prioritetas kataloge</li>
         <li>Iki 5 svetainių</li>
-        <li>Komandos valdymas</li>
         <li>Asmeninis onboarding</li>
         <li>Telefoninis palaikymas</li>
       </ul>
@@ -2885,7 +3230,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          <p>Treatwell ir Booksy yra marketplace platformos — jos ima <strong>20–30% komisinių</strong> nuo kiekvienos rezervacijos, o klientų ryšys priklauso joms, ne jums. Kallo yra kitoks: fiksuotas mėnesinis mokestis (€29/mėn), jokių komisinių nuo rezervacijų, ir klientai bendrauja tiesiai per jūsų svetainę. Mes esame jūsų virtualus asistentas, o ne konkurentas dėl jūsų klientų.</p>
+          <p>Treatwell ir Booksy ima <strong>20–30% komisinių</strong> nuo kiekvienos rezervacijos, o klientų ryšys priklauso joms. Kallo veikia kitaip: fiksuotas €29/mėn mokestis už AI asistentą <strong>ir</strong> sąrašą kallo.lt kataloge. Rezervacijos iš jūsų pačių svetainės — <strong>be komisinių</strong>. Tik tas rezervacijas, kurias atvedėme mes iš kallo.lt, apmokestinama <strong>8%</strong>. Jūs išlaikote klientų ryšį ir duomenis.</p>
         </div>
       </div>
     </div>
@@ -3167,12 +3512,12 @@
       { day: 4, t: [10, 30], dur: 60, title: 'Gabija M. — Kirpimas' }
     ];
 
-    // Kallo events — added live over time
+    // Kallo events — added live over time (source: website or kallo.lt directory)
     const kalloEvents = [
-      { day: 2, t: [10, 0], dur: 45, title: 'Rūta J. — Kirpimas' },
-      { day: 2, t: [15, 30], dur: 60, title: 'Monika V. — Manikiūras' },
-      { day: 4, t: [14, 30], dur: 90, title: 'Tomas K. — Kirpimas' },
-      { day: 1, t: [16, 0], dur: 45, title: 'Laura G. — Pedikiūras' }
+      { day: 2, t: [10, 0], dur: 45, title: 'Rūta J. — Kirpimas', source: 'kallo.lt' },
+      { day: 2, t: [15, 30], dur: 60, title: 'Monika V. — Manikiūras', source: 'svetainė' },
+      { day: 4, t: [14, 30], dur: 90, title: 'Tomas K. — Kirpimas', source: 'kallo.lt' },
+      { day: 1, t: [16, 0], dur: 45, title: 'Laura G. — Pedikiūras', source: 'svetainė' }
     ];
 
     function createEvent(ev, isKallo, animate) {
@@ -3184,7 +3529,8 @@
       div.style.height = durToHeight(ev.dur) + 'px';
       const hh = String(ev.t[0]).padStart(2, '0');
       const mm = String(ev.t[1]).padStart(2, '0');
-      const badge = isKallo ? '<div class="ev-badge">Kallo</div>' : '';
+      const badgeText = isKallo ? (ev.source === 'kallo.lt' ? 'Kallo · katalogas' : 'Kallo · svetainė') : '';
+      const badge = isKallo ? '<div class="ev-badge">' + badgeText + '</div>' : '';
       div.innerHTML =
         '<div class="ev-time">' + hh + ':' + mm + '</div>' +
         '<div class="ev-title">' + ev.title + '</div>' +
@@ -3494,7 +3840,7 @@
         setTimeout(() => wInput.focus(), 400);
         // Show welcome message on first open
         if (wBody.children.length === 0) {
-          appendWidgetMsg({ who: 'bot', text: 'Labas! 👋 Esu Studio Aura asistentas — tai yra demonstracija, kaip Kallo veikia jūsų verslo svetainėje. Užduokite klausimą apie paslaugas, kainas ar darbo laiką!' });
+          appendWidgetMsg({ who: 'bot', text: 'Labas! 👋 Esu Studio Aura asistentas — demonstracija, kaip Kallo veikia tiek jūsų svetainėje, tiek kallo.lt kataloge. Užduokite klausimą apie paslaugas, kainas ar darbo laiką!' });
         }
       }
     }
