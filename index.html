@@ -452,6 +452,32 @@
     flex-shrink: 0;
   }
   .chat-input button { flex-shrink: 0; }
+  .chat-input button:hover:not(:disabled) { background: var(--ink); transform: scale(1.06); }
+  .chat-input input:disabled, .chat-input button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .chat-input.active {
+    box-shadow: inset 0 0 0 1px var(--coral);
+    animation: inputGlow 1.4s ease-out 1;
+  }
+  @keyframes inputGlow {
+    0% { box-shadow: inset 0 0 0 2px var(--coral), 0 0 0 0 rgba(255,107,71,0.45); }
+    100% { box-shadow: inset 0 0 0 1px var(--border), 0 0 0 10px rgba(255,107,71,0); }
+  }
+  .try-hint {
+    align-self: center;
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--blush);
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-top: 4px;
+    animation: hintPulse 1.8s ease-in-out infinite;
+    transition: opacity 0.4s;
+  }
+  .try-hint.fade { opacity: 0; }
+  @keyframes hintPulse {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
 
   /* ---------- Ticker ---------- */
   .ticker-section {
@@ -2620,9 +2646,9 @@
       </div>
     </div>
     <div class="chat-body" id="chat-body"></div>
-    <div class="chat-input">
-      <input type="text" placeholder="Rašyti žinutę..." disabled />
-      <button disabled>→</button>
+    <div class="chat-input" id="chat-input-wrap">
+      <input type="text" id="chat-input" placeholder="Rašyti žinutę..." disabled autocomplete="off" />
+      <button id="chat-send" disabled aria-label="Siųsti">→</button>
     </div>
   </div>
 </section>
@@ -3433,28 +3459,163 @@
   }, { threshold: 0.5 });
   document.querySelectorAll('.stat .num').forEach(el => statsIO.observe(el));
 
-  // ---------- Hero chat auto-play (non-interactive, loops forever) ----------
+  // ---------- Hero chat: scripted attract mode + interactive AI demo ----------
   (function() {
     if (new URLSearchParams(location.search).has('static')) return;
     const chatBody = document.getElementById('chat-body');
-    if (!chatBody) return;
+    const chatInput = document.getElementById('chat-input');
+    const chatSend = document.getElementById('chat-send');
+    const chatWrap = document.getElementById('chat-input-wrap');
+    if (!chatBody || !chatInput || !chatSend) return;
 
-    const script = [
-      { who: 'user', text: 'Labas! Ar dirbate šeštadienį?' },
-      { who: 'bot', text: 'Labas! Taip, šeštadieniais dirbame 10:00–18:00. Ar norėtumėte užsirezervuoti laiką?', delay: 1400 },
-      { who: 'user', text: 'Kiek kainuoja kirpimas?' },
-      { who: 'bot', text: 'Moteriškas kirpimas — 25 €, vyriškas — 18 €. Ar galiu padėti rezervuoti?', delay: 1200 },
-      { who: 'user', text: 'Taip, šeštadienį 14:00' },
-      { who: 'bot', text: '✓ Rezervuota! Šeštadienis, 14:00, moteriškas kirpimas. Gausite SMS patvirtinimą.', delay: 1500 }
-    ];
+    // ---------- Studio Aura knowledge base ----------
+    const STUDIO = {
+      name: 'Studio Aura',
+      address: 'Vilniaus g. 25, Vilnius',
+      phone: '+370 600 12345',
+      hours: {
+        pirmadienis: '10:00–19:00',
+        antradienis: '10:00–19:00',
+        treciadienis: '10:00–19:00',
+        ketvirtadienis: '10:00–20:00',
+        penktadienis: '10:00–20:00',
+        sestadienis: '10:00–18:00',
+        sekmadienis: 'nedirbame'
+      },
+      services: [
+        { name: 'Moteriškas kirpimas', price: 25, min: 45 },
+        { name: 'Vyriškas kirpimas', price: 18, min: 30 },
+        { name: 'Vaikų kirpimas', price: 12, min: 30 },
+        { name: 'Dažymas (vienas tonas)', price: 55, min: 90 },
+        { name: 'Sruogelės', price: 75, min: 120 },
+        { name: 'Manikiūras', price: 22, min: 45 },
+        { name: 'Pedikiūras', price: 28, min: 60 }
+      ]
+    };
 
-    function appendMsg(m) {
+    // Strip Lithuanian diacritics for keyword matching
+    const strip = s => s.toLowerCase()
+      .replace(/[ąàá]/g, 'a').replace(/č/g, 'c').replace(/ę|ė/g, 'e')
+      .replace(/į/g, 'i').replace(/š/g, 's').replace(/ų|ū/g, 'u')
+      .replace(/ž/g, 'z');
+
+    const dayByIdx = ['sekmadienis','pirmadienis','antradienis','treciadienis','ketvirtadienis','penktadienis','sestadienis'];
+
+    function formatServices() {
+      return STUDIO.services.map(s => `• ${s.name} — ${s.price} € (${s.min} min.)`).join('\n');
+    }
+    function formatHours() {
+      const labels = { pirmadienis:'P', antradienis:'A', treciadienis:'T', ketvirtadienis:'K', penktadienis:'Pn', sestadienis:'Š', sekmadienis:'S' };
+      return Object.entries(STUDIO.hours).map(([d,h]) => `${labels[d]}: ${h}`).join('  ·  ');
+    }
+
+    function getResponse(raw) {
+      const q = strip(raw);
+      const has = (...kws) => kws.some(k => q.includes(k));
+      const todayIdx = new Date().getDay();
+      const todayName = dayByIdx[todayIdx];
+
+      // Greeting
+      if (has('labas','sveiki','laba diena','labas vakaras','hi','hello','hej')) {
+        return 'Labas! Esu Kallo asistentas iš Studio Aura. Kuo galiu padėti? Galiu pasakyti darbo laiką, kainas arba padėti užsirezervuoti.';
+      }
+
+      // Specific day
+      if (has('sekmadien')) return `Sekmadieniais ${STUDIO.hours.sekmadienis}. Užsukite kitomis dienomis — šeštadienį dirbame iki 18:00.`;
+      if (has('sestadien') || has('sestadieni')) return `Šeštadieniais dirbame ${STUDIO.hours.sestadienis}. Ar padėti užsirezervuoti?`;
+      if (has('pirmadien')) return `Pirmadieniais ${STUDIO.hours.pirmadienis}.`;
+      if (has('antradien')) return `Antradieniais ${STUDIO.hours.antradienis}.`;
+      if (has('treciadien')) return `Trečiadieniais ${STUDIO.hours.treciadienis}.`;
+      if (has('ketvirtadien')) return `Ketvirtadieniais ${STUDIO.hours.ketvirtadienis}.`;
+      if (has('penktadien')) return `Penktadieniais ${STUDIO.hours.penktadienis}.`;
+
+      // Hours / schedule
+      if (has('dirbat','darbo laik','kada atidar','kada uzdar','darbo valan','atidaryt','grafikas','valandos')) {
+        return `Mūsų darbo laikas:\n${formatHours()}\n\nŠiandien (${todayName}) — ${STUDIO.hours[todayName]}.`;
+      }
+
+      // Booking intent
+      if (has('uzsisak','rezervuo','noriu laik','uzsirasy','priimat','priimate','registruo')) {
+        return `Žinoma! Kokios paslaugos norėtumėte? Šiandien laisvi laikai:\n• 11:30\n• 14:00\n• 16:30\n\nParašykite kurį ir savo vardą — iškart patvirtinsiu.`;
+      }
+
+      // Specific services — check BEFORE generic "kiek kainuoja"
+      if (has('dazym')) {
+        const s = STUDIO.services.find(x => x.name.includes('Dažymas'));
+        return `${s.name} — ${s.price} €, trukmė ${s.min} min. Sruogelės — 75 €. Ar rezervuojame?`;
+      }
+      if (has('sruogel')) return 'Sruogelės — 75 €, apie 2 val. Patariu rezervuoti iš anksto.';
+      if (has('manikiur') || has('nagu')) {
+        const s = STUDIO.services.find(x => x.name === 'Manikiūras');
+        return `${s.name} — ${s.price} €, ${s.min} min. Galiu parodyti laisvus laikus.`;
+      }
+      if (has('pedikiur')) {
+        const s = STUDIO.services.find(x => x.name === 'Pedikiūras');
+        return `${s.name} — ${s.price} €, ${s.min} min.`;
+      }
+      if (has('vaiku') || has('vaikisk')) return 'Vaikų kirpimas — 12 €, 30 min.';
+      if (has('vyrisk') || has('vyru')) return 'Vyriškas kirpimas — 18 €, 30 min.';
+      if (has('moterisk')) return 'Moteriškas kirpimas — 25 €, 45 min.';
+      if (has('kirpim') || has('kirp')) {
+        return 'Kirpimo kainos:\n• Moteriškas — 25 €\n• Vyriškas — 18 €\n• Vaikų — 12 €\n\nKurį rezervuosime?';
+      }
+
+      // Prices / services list
+      if (has('kain','kiek kain','paslaug','meniu','preisk','prekes')) {
+        return `Mūsų paslaugos ir kainos:\n${formatServices()}\n\nKurią norėtumėte užsisakyti?`;
+      }
+
+      // Location
+      if (has('adres','kur esat','kur yra','lokacij','vieta','kaip rast','kaip atvyk')) {
+        return `Esame ${STUDIO.address}. Netoli Katedros aikštės — 5 min. pėsčiomis nuo Gedimino pr.`;
+      }
+
+      // Parking
+      if (has('parkav','parking','automobil','masin')) {
+        return 'Nemokama gatvinė parkavimo vieta šalia salono (iki 2 val.). Už 100 m yra mokamas parkingas.';
+      }
+
+      // Payment
+      if (has('moket','apmokej','kortel','grynais','pavedim','apple pay','google pay','paysera')) {
+        return 'Priimame grynais, banko kortele ir Apple/Google Pay. Taip pat galima mokėti pavedimu.';
+      }
+
+      // Cancellation
+      if (has('atsauk','neat','negaleciau','negaliu atei','atideti','perkelti')) {
+        return 'Rezervaciją galite atšaukti be mokesčio likus 12 val. iki vizito. Jei vėliau — prašome susisiekti telefonu.';
+      }
+
+      // Contact
+      if (has('telefon','numer','skambint','kontaktai','susisiek')) {
+        return `Mūsų telefonas: ${STUDIO.phone}. El. paštu: info@studioaura.lt`;
+      }
+
+      // Languages
+      if (has('kalba','english','russian','rusiskai','angliskai','po angl','po rus')) {
+        return 'Kalbame lietuviškai ir angliškai. Rusiškai — šiek tiek 🙂';
+      }
+
+      // Thanks / goodbye
+      if (has('aciu','dekui','thanks','viso','iki')) {
+        return 'Prašom! Lauksime pas mus 💛';
+      }
+
+      // Fallback
+      return 'Atsiprašau, nesu tikras dėl šio klausimo. Galite palikti savo telefono numerį ir salono savininkas susisieks per valandą. Arba pabandykite paklausti apie kainas, darbo laiką ar rezervaciją.';
+    }
+
+    // ---------- UI helpers ----------
+    function appendMsg(who, text) {
       const div = document.createElement('div');
-      div.className = 'msg ' + m.who;
-      div.textContent = m.text;
+      div.className = 'msg ' + who;
+      // textContent preserves newlines via white-space: pre-wrap would be needed;
+      // use innerHTML with escaped text + <br> for line breaks
+      const safe = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+      div.innerHTML = safe;
       chatBody.appendChild(div);
       setTimeout(() => div.classList.add('show'), 15);
       chatBody.scrollTop = chatBody.scrollHeight;
+      return div;
     }
 
     function showTyping() {
@@ -3463,8 +3624,19 @@
       t.innerHTML = '<span></span><span></span><span></span>';
       chatBody.appendChild(t);
       setTimeout(() => t.classList.add('show'), 15);
+      chatBody.scrollTop = chatBody.scrollHeight;
       return t;
     }
+
+    // ---------- Scripted attract mode ----------
+    const script = [
+      { who: 'user', text: 'Labas! Ar dirbate šeštadienį?' },
+      { who: 'bot', text: 'Labas! Taip, šeštadieniais dirbame 10:00–18:00. Ar norėtumėte užsirezervuoti laiką?', delay: 1400 },
+      { who: 'user', text: 'Kiek kainuoja kirpimas?' },
+      { who: 'bot', text: 'Moteriškas kirpimas — 25 €, vyriškas — 18 €. Ar galiu padėti rezervuoti?', delay: 1200 },
+      { who: 'user', text: 'Taip, šeštadienį 14:00' },
+      { who: 'bot', text: '✓ Rezervuota! Šeštadienis, 14:00, moteriškas kirpimas. Gausite SMS patvirtinimą.', delay: 1500 }
+    ];
 
     async function playScript() {
       for (const m of script) {
@@ -3475,21 +3647,76 @@
         } else {
           await new Promise(r => setTimeout(r, 600));
         }
-        appendMsg(m);
+        appendMsg(m.who, m.text);
         await new Promise(r => setTimeout(r, m.who === 'bot' ? 1500 : 800));
       }
     }
 
-    async function loop() {
-      while (true) {
-        chatBody.innerHTML = '';
-        await new Promise(r => setTimeout(r, 800));
-        await playScript();
-        await new Promise(r => setTimeout(r, 3500));
-      }
+    // ---------- Activate interactivity after scripted run ----------
+    let hintEl = null;
+    let userHasInteracted = false;
+
+    function activateInput() {
+      chatInput.disabled = false;
+      chatSend.disabled = false;
+      chatInput.placeholder = 'Užduokite klausimą...';
+      chatWrap.classList.add('active');
+      // Remove glow class after animation so it doesn't stick
+      setTimeout(() => chatWrap.classList.remove('active'), 1500);
+
+      // Add pulsing hint
+      hintEl = document.createElement('div');
+      hintEl.className = 'try-hint';
+      hintEl.textContent = '↓ Išbandykite patys';
+      chatBody.appendChild(hintEl);
+      chatBody.scrollTop = chatBody.scrollHeight;
+
+      // Fade hint after 5s
+      setTimeout(() => {
+        if (hintEl && !userHasInteracted) {
+          hintEl.classList.add('fade');
+          setTimeout(() => hintEl && hintEl.remove(), 500);
+        }
+      }, 5000);
     }
 
-    setTimeout(loop, 1500);
+    let busy = false;
+    async function handleUserMessage() {
+      if (busy) return;
+      const txt = chatInput.value.trim();
+      if (!txt) return;
+      busy = true;
+      userHasInteracted = true;
+      if (hintEl) { hintEl.classList.add('fade'); setTimeout(() => hintEl && hintEl.remove(), 400); hintEl = null; }
+
+      chatInput.value = '';
+      appendMsg('user', txt);
+      await new Promise(r => setTimeout(r, 400));
+
+      const t = showTyping();
+      const delay = 800 + Math.random() * 600;
+      await new Promise(r => setTimeout(r, delay));
+      t.remove();
+      appendMsg('bot', getResponse(txt));
+      busy = false;
+      chatInput.focus();
+    }
+
+    chatSend.addEventListener('click', handleUserMessage);
+    chatInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); handleUserMessage(); }
+    });
+
+    // ---------- Kickoff ----------
+    async function run() {
+      chatBody.innerHTML = '';
+      await new Promise(r => setTimeout(r, 800));
+      await playScript();
+      await new Promise(r => setTimeout(r, 600));
+      activateInput();
+    }
+
+    setTimeout(run, 1200);
   })();
 
   // (old interactive code removed — now lives in the floating widget IIFE below)
