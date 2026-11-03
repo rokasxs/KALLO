@@ -6,7 +6,7 @@
 <title>Kallo Klubams — demo</title>
 <meta name="description" content="Išbandykite Kallo Klubams su pavyzdiniais duomenimis: nariai, lankomumas, mokėjimai ir priminimai tėvams." />
 <meta name="robots" content="noindex" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
 <meta name="theme-color" content="#1A0A00" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,10 +38,10 @@
 
   .app { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: calc(100% - 40px); }
   .side { background: var(--ink); color: var(--cream); padding: 22px 14px; display: flex; flex-direction: column; gap: 22px; position: sticky; top: 40px; height: calc(100vh - 40px); }
-  .logo { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; padding: 0 8px; }
-  .logo-icon { width: 32px; height: 32px; background: var(--cream); border-radius: 9px; display: grid; place-items: center; position: relative; }
+  .logo { display: inline-flex; align-items: center; gap: 3px; text-decoration: none; padding: 0 8px; }
+  .logo-icon { width: 32px; height: 32px; background: var(--coral); border-radius: 9px; display: grid; place-items: center; position: relative; }
   .logo-icon span { font-family: var(--serif); color: var(--ink); font-size: 20px; line-height: 1; }
-  .logo-icon::after { content: ''; position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; background: var(--coral); border-radius: 50%; }
+  .logo-icon::after { content: ''; position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; background: var(--cream); border-radius: 50%; }
   .logo-text { font-family: var(--serif); font-size: 24px; letter-spacing: -0.03em; }
   .club { margin: 0 4px; padding: 12px; border-radius: 12px; background: rgba(255,252,250,.07); display: grid; gap: 2px; }
   .club b { font-size: 14px; } .club small { font-size: 12px; color: rgba(255,252,250,.6); }
@@ -96,6 +96,18 @@
   .grp-row small { color: var(--muted); font-size: 12.5px; }
   .grp-row .meter { grid-column: 1 / -1; background: var(--blush); margin: 0; }
   .grp-row .meter i { background: var(--paid); }
+  /* cash: coach marks it at training, owner sees who still holds it */
+  .pay-acts { display: inline-flex; gap: 6px; }
+  .split { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; }
+  .split i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+  .cash-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .cash-row:first-child { padding-top: 0; } .cash-row:last-child { border-bottom: 0; padding-bottom: 0; }
+  .cash-row small { display: block; color: var(--muted); font-size: 12.5px; }
+  .cash-row .r { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .cash-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cash-chip { border: 0; background: var(--blush); color: var(--ink); font-weight: 600; font-size: 13px; padding: 8px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--pale); transition: background .2s ease; }
+  .cash-chip:hover { background: var(--pale); }
+  .cash-chip b { color: var(--coral-deep); margin-left: 4px; }
 
   .toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
   .toolbar input, .toolbar select { height: 42px; border-radius: 12px; border: 1px solid var(--line); background-color: #fff; padding: 0 14px; min-width: 0; }
@@ -319,6 +331,15 @@
         payments[id] = hist;
       }
     });
+    // how this month's payments arrived: about half in cash to the coach at training
+    var via = {}, held = {};
+    members.forEach(function (m) {
+      if (payments[m.id][CUR] !== 'paid') return;
+      var x = rnd(), coach = groups.filter(function (g) { return g.id === m.group; })[0].coach;
+      via[m.id] = x < 0.5 ? { how: 'cash', by: coach } : { how: x < 0.78 ? 'link' : 'bank', by: null };
+      if (x < 0.5) held[coach] = (held[coach] || 0) + m.fee;
+    });
+    var handed = { 'Ieva S.': held['Ieva S.'] || 0 };
     var attendance = [];
     groups.forEach(function (g) {
       var ids = members.filter(function (m) { return m.group === g.id; }).map(function (m) { return m.id; });
@@ -327,7 +348,7 @@
       });
     });
     return {
-      v: 2, view: 'dash', groups: groups, members: members, payments: payments, attendance: attendance,
+      v: 3, view: 'dash', via: via, handed: handed, groups: groups, members: members, payments: payments, attendance: attendance,
       messages: [
         { at: '11-07 09:00', to: 'Nesumokėjusiems', text: 'Priminimas: lapkričio mokestis', n: 9 },
         { at: '11-01 09:00', to: 'Visiems', text: 'Lapkričio mokesčio prašymas', n: 36 },
@@ -335,17 +356,17 @@
       ],
       activity: [
         { kind: 'paid', text: 'Ema Kazlauskaitė sumokėjo 30 €', at: 'prieš 12 min.' },
-        { kind: 'paid', text: 'Jokūbas Paulauskas sumokėjo 35 €', at: 'prieš 2 val.' },
+        { kind: 'cash', text: 'Jokūbas Paulauskas sumokėjo grynais 35 € · gavo Tomas V.', at: 'prieš 2 val.' },
         { kind: 'att', text: 'Tomas V. pažymėjo lankomumą: Krepšinis U-12 (8/9)', at: 'vakar' },
         { kind: 'rem', text: 'Išsiųsti 9 priminimai nesumokėjusiems', at: '11-07' }
       ],
-      settings: { r1: true, r7: true, r14: true, sms: true, email: true, method: 'paysera', due: 10 }
+      settings: { r1: true, r7: true, r14: true, sms: true, email: true, method: 'mixed', due: 10 }
     };
   }
 
   // ---------- state + storage ----------
-  var KEY = 'kallo-demo-v2', S;
-  function load() { try { var raw = localStorage.getItem(KEY); if (raw) { var d = JSON.parse(raw); if (d && d.v === 2) return d; } } catch (e) {} return seedData(); }
+  var KEY = 'kallo-demo-v3', S;
+  function load() { try { var raw = localStorage.getItem(KEY); if (raw) { var d = JSON.parse(raw); if (d && d.v === 3) return d; } } catch (e) {} return seedData(); }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
   S = load();
   var UI = { q: '', group: 'all', status: 'all', attGroup: 'g2', attSel: null, payFilter: 'all', imported: false, msgTo: 'late', msgText: '' };
@@ -353,16 +374,36 @@
   var groupOf = function (id) { return S.groups.filter(function (g) { return g.id === id; })[0]; };
   var memberOf = function (id) { return S.members.filter(function (m) { return m.id === id; })[0]; };
   var statusOf = function (m, mo) { return (S.payments[m.id] || {})[mo || CUR] || 'none'; };
+  var viaOf = function (m) { return statusOf(m) === 'paid' ? S.via[m.id] || { how: 'bank', by: null } : null; };
+  var VIA = { cash: 'grynais', link: 'nuoroda', bank: 'pavedimu' };
+  var viaText = function (v) { return VIA[v.how] + (v.how === 'cash' && v.by ? ' · ' + v.by : ''); };
+  // cash each coach took at training this month, and how much of it is still with them
+  function cashByCoach() {
+    var out = {};
+    S.groups.forEach(function (g) { out[g.coach] = out[g.coach] || { coach: g.coach, n: 0, sum: 0 }; });
+    S.members.forEach(function (m) {
+      var v = viaOf(m); if (!v || v.how !== 'cash' || !v.by) return;
+      var o = out[v.by] || (out[v.by] = { coach: v.by, n: 0, sum: 0 }); o.n++; o.sum += m.fee;
+    });
+    return Object.keys(out).map(function (k) { var o = out[k]; o.held = Math.max(0, o.sum - (S.handed[k] || 0)); return o; });
+  }
+  function cashRows() {
+    return cashByCoach().map(function (c) {
+      var right = c.held ? '<b class="num">' + eur(c.held) + '</b><button class="btn btn-ghost btn-sm" data-handover="' + esc(c.coach) + '">Perdavė</button>'
+        : '<span class="chip paid">' + (c.sum ? 'Perduota' : 'Nėra') + '</span>';
+      return '<div class="cash-row"><span><b>' + esc(c.coach) + '</b><small>' + c.n + ' ' + plural(c.n, 'mokėjimas', 'mokėjimai', 'mokėjimų') + ' grynais · ' + eur(c.sum) + '</small></span><span class="r">' + right + '</span></div>';
+    }).join('');
+  }
 
   function stats() {
-    var due = 0, paid = 0, waitN = 0, lateN = 0, lateSum = 0;
+    var due = 0, paid = 0, cash = 0, waitN = 0, lateN = 0, lateSum = 0;
     S.members.forEach(function (m) {
       var st = statusOf(m); due += m.fee;
-      if (st === 'paid') paid += m.fee; else if (st === 'late') { lateN++; lateSum += m.fee; } else if (st === 'wait') waitN++;
+      if (st === 'paid') { paid += m.fee; if (viaOf(m).how === 'cash') cash += m.fee; } else if (st === 'late') { lateN++; lateSum += m.fee; } else if (st === 'wait') waitN++;
     });
     var att = S.attendance.filter(function (a) { return a.date.slice(0, 7) === CUR; }), seen = 0, tot = 0;
     att.forEach(function (a) { tot += S.members.filter(function (m) { return m.group === a.group; }).length; seen += a.present.length; });
-    return { due: due, paid: paid, waitN: waitN, lateN: lateN, lateSum: lateSum, open: waitN + lateN, att: tot ? Math.round(seen / tot * 100) : 0 };
+    return { due: due, paid: paid, cash: cash, waitN: waitN, lateN: lateN, lateSum: lateSum, open: waitN + lateN, att: tot ? Math.round(seen / tot * 100) : 0 };
   }
 
   // ---------- toasts ----------
@@ -390,7 +431,7 @@
   V.dash = function () {
     var s = stats(), pct = Math.round(s.paid / s.due * 100);
     var feed = S.activity.map(function (a) {
-      var ic = a.kind === 'paid' ? '<i style="background:var(--paid-bg);color:var(--paid)">€</i>' : a.kind === 'att' ? '<i style="background:var(--blush);color:var(--coral-deep)">✓</i>' : '<i style="background:var(--wait-bg);color:var(--wait)">↻</i>';
+      var ic = a.kind === 'paid' || a.kind === 'cash' ? '<i style="background:var(--paid-bg);color:var(--paid)">€</i>' : a.kind === 'att' ? '<i style="background:var(--blush);color:var(--coral-deep)">✓</i>' : '<i style="background:var(--wait-bg);color:var(--wait)">↻</i>';
       return '<div>' + ic + '<span>' + esc(a.text) + '</span><time>' + esc(a.at) + '</time></div>';
     }).join('');
     var groups = S.groups.map(function (g) {
@@ -401,7 +442,7 @@
     return mobClub() +
       '<div class="page-h"><div><h1>Labas, Rūta</h1><p>' + cap(MONTHS[TODAY.m]) + ' ' + TODAY.d + ' d. Štai kaip sekasi šį mėnesį.</p></div><button class="btn btn-coral" data-act="remindLate"' + (s.lateN ? '' : ' disabled') + '>Priminti vėluojantiems (' + s.lateN + ')</button></div>' +
       '<div class="kpis">' +
-        '<div class="card kpi accent"><span>Surinkta už ' + MONTHS_ACC[TODAY.m] + '</span><strong>' + eur(s.paid) + '</strong><small>iš ' + eur(s.due) + ' · ' + pct + ' %</small><div class="meter"><i style="width:' + pct + '%"></i></div></div>' +
+        '<div class="card kpi accent"><span>Surinkta už ' + MONTHS_ACC[TODAY.m] + '</span><strong>' + eur(s.paid) + '</strong><small>iš ' + eur(s.due) + ' · ' + eur(s.cash) + ' grynais</small><div class="meter"><i style="width:' + pct + '%"></i></div></div>' +
         '<div class="card kpi"><span>Laukiama</span><strong>' + s.waitN + '</strong><small>' + plural(s.waitN, 'narys dar moka', 'nariai dar moka', 'narių dar moka') + '</small></div>' +
         '<div class="card kpi"><span>Vėluoja</span><strong style="color:var(--late)">' + s.lateN + '</strong><small>' + eur(s.lateSum) + ' po termino</small></div>' +
         '<div class="card kpi"><span>Lankomumas</span><strong>' + s.att + ' %</strong><small>šį mėnesį, visos grupės</small></div>' +
@@ -413,7 +454,8 @@
         '<div><b>Mėn. pabaiga</b><span>Ataskaita jums el. paštu</span></div>' +
       '</div></div></div>' +
       '<div class="grid2"><div class="card"><div class="card-h"><h2>Naujausi įvykiai</h2></div><div class="card-b feed">' + feed + '</div></div>' +
-      '<div class="card"><div class="card-h"><h2>Grupės</h2><button class="btn btn-ghost btn-sm" data-view="members">Visi nariai</button></div><div class="card-b groups">' + groups + '</div></div></div>';
+      '<div style="display:grid;gap:16px;align-content:start"><div class="card"><div class="card-h"><h2>Grupės</h2><button class="btn btn-ghost btn-sm" data-view="members">Visi nariai</button></div><div class="card-b groups">' + groups + '</div></div>' +
+      '<div class="card"><div class="card-h"><h2>Grynieji pas trenerius</h2><button class="btn btn-ghost btn-sm" data-view="pay">Mokėjimai</button></div><div class="card-b">' + cashRows() + '</div></div></div></div>';
   };
 
   V.members = function () {
@@ -440,6 +482,9 @@
     var g = groupOf(UI.attGroup), ms = S.members.filter(function (m) { return m.group === g.id; });
     if (!UI.attSel || UI.attSel.group !== g.id) UI.attSel = { group: g.id, ids: ms.map(function (m) { return m.id; }) };
     var sel = UI.attSel.ids;
+    var owe = ms.filter(function (m) { return statusOf(m) !== 'paid'; });
+    var cash = owe.length ? '<div class="cash-chips">' + owe.map(function (m) { return '<button type="button" class="cash-chip" data-cash="' + m.id + '" data-by="' + esc(g.coach) + '">' + esc(m.name.split(' ')[0]) + '<b>' + eur(m.fee) + '</b></button>'; }).join('') + '</div>'
+      : '<p class="meta" style="margin:0">Visi šios grupės nariai už ' + MONTHS_ACC[TODAY.m] + ' sumokėjo.</p>';
     var list = ms.map(function (m) { var on = sel.indexOf(m.id) >= 0; return '<button type="button" class="att-item" data-toggle="' + m.id + '" aria-pressed="' + on + '"><span class="who"><span class="av">' + initials(m.name) + '</span><b>' + esc(m.name) + '</b></span><span class="tick">✓</span></button>'; }).join('');
     var hist = S.attendance.filter(function (a) { return a.group === g.id; }).slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; }).map(function (a) {
       var pct = Math.round(a.present.length / ms.length * 100);
@@ -448,7 +493,8 @@
     return mobClub() +
       '<div class="page-h"><div><h1>Lankomumas</h1><p>Treneris pažymi telefone per 10 sekundžių.</p></div></div>' +
       '<div class="toolbar"><div class="seg" role="group" aria-label="Grupė">' + S.groups.map(function (x) { return '<button type="button" data-attgroup="' + x.id + '" aria-pressed="' + (x.id === g.id) + '">' + esc(x.name) + '</button>'; }).join('') + '</div></div>' +
-      '<div class="att-wrap"><div class="card"><div class="card-h"><h2>Šiandien · ' + esc(g.days.split(' ').slice(-1)[0]) + '</h2><span class="meta" id="attCount">' + sel.length + '/' + ms.length + '</span></div><div class="att-list">' + list + '</div><div class="card-b"><button class="btn btn-coral" style="width:100%" data-act="saveAtt">Išsaugoti lankomumą</button></div></div>' +
+      '<div class="att-wrap"><div class="card"><div class="card-h"><h2>Šiandien · ' + esc(g.days.split(' ').slice(-1)[0]) + '</h2><span class="meta" id="attCount">' + sel.length + '/' + ms.length + '</span></div><div class="att-list">' + list + '</div><div class="card-b"><button class="btn btn-coral" style="width:100%" data-act="saveAtt">Išsaugoti lankomumą</button></div>' +
+      '<div class="card-b" style="border-top:1px solid var(--line);display:grid;gap:10px"><span><b>Atnešė pinigus?</b><br><span class="meta">Paspauskite vardą, kai gaunate grynuosius. Vadovė tai mato iš karto.</span></span>' + cash + '</div></div>' +
       '<div class="card"><div class="card-h"><h2>' + esc(g.name) + ' · ' + MONTHS[TODAY.m] + '</h2><span class="meta">' + esc(g.coach) + '</span></div><div class="card-b hist">' + (hist || '<p class="empty">Dar nėra įrašų.</p>') + '</div></div></div>';
   };
 
@@ -456,7 +502,7 @@
     var s = stats();
     var rows = S.members.filter(function (m) { return UI.payFilter === 'all' || statusOf(m) === UI.payFilter; }).map(function (m) {
       var st = statusOf(m);
-      return '<tr data-member="' + m.id + '" tabindex="0"><td><div class="who"><span class="av">' + initials(m.name) + '</span><span><b>' + esc(m.name) + '</b><small>' + esc(groupOf(m.group).name) + '</small></span></div></td><td class="num">' + eur(m.fee) + '</td><td><span class="chip ' + st + '">' + STATUS[st] + '</span></td><td class="num">' + (st === 'paid' ? '<span class="meta">—</span>' : '<button class="btn btn-ghost btn-sm" data-markpaid="' + m.id + '">Pažymėti apmokėtu</button>') + '</td></tr>';
+      return '<tr data-member="' + m.id + '" tabindex="0"><td><div class="who"><span class="av">' + initials(m.name) + '</span><span><b>' + esc(m.name) + '</b><small>' + esc(groupOf(m.group).name) + '</small></span></div></td><td class="num">' + eur(m.fee) + '</td><td><span class="chip ' + st + '">' + STATUS[st] + '</span></td><td class="num">' + (st === 'paid' ? '<span class="meta">' + esc(viaText(viaOf(m))) + '</span>' : '<span class="pay-acts"><button class="btn btn-ghost btn-sm" data-cash="' + m.id + '">Grynais</button><button class="btn btn-ghost btn-sm" data-markpaid="' + m.id + '">Pavedimu</button></span>') + '</td></tr>';
     }).join('');
     var imp = UI.imported ? '<div class="import"><b>Banko išrašas sutikrintas</b><span class="meta">Kallo atpažino mokėjimus pagal mokėjimo paskirtį ir pažymėjo juos automatiškai.</span>' + UI.imported.map(function (r) { return '<div class="import-row ok"><span>' + esc(r.line) + '</span><b>' + esc(r.who) + ' ✓</b></div>'; }).join('') + '</div>'
       : '<div class="import"><b>Gavote pavedimų į banką?</b><span class="meta">Įkelkite banko išrašą, ir Kallo pats suras, kas sumokėjo.</span><button class="btn btn-ink" data-act="import" style="justify-self:start"' + (s.open ? '' : ' disabled') + '>Įkelti banko išrašą (pavyzdys)</button></div>';
@@ -464,8 +510,10 @@
       '<div class="page-h"><div><h1>Mokėjimai · ' + MONTHS[TODAY.m] + '</h1><p>Surinkta ' + eur(s.paid) + ' iš ' + eur(s.due) + '. Terminas — ' + S.settings.due + ' d.</p></div><button class="btn btn-coral" data-act="remindLate"' + (s.open ? '' : ' disabled') + '>Priminti nesumokėjusiems (' + s.open + ')</button></div>' +
       '<div class="grid2" style="margin-bottom:16px"><div>' + imp + '</div><div class="card"><div class="card-b" style="display:grid;gap:10px">' +
         '<div class="hist-row"><span>Apmokėta</span><div class="meter"><i style="width:' + Math.round(s.paid / s.due * 100) + '%"></i></div><b class="num">' + Math.round(s.paid / s.due * 100) + ' %</b></div>' +
-        '<div class="meta">Mokėjimo būdas: ' + (S.settings.method === 'paysera' ? 'Paysera nuoroda' : 'bankinis pavedimas su unikalia paskirtimi') + ' · pinigai keliauja tiesiai į klubo sąskaitą</div>' +
+        '<div class="split"><span><i style="background:var(--coral)"></i>Grynais <b>' + eur(s.cash) + '</b></span><span><i style="background:var(--paid)"></i>Pavedimu ir nuoroda <b>' + eur(s.paid - s.cash) + '</b></span></div>' +
+        '<div class="meta">Tėvai moka kaip patogu. Pinigai keliauja klubui arba treneriui į rankas, Kallo jų nelaiko.</div>' +
       '</div></div></div>' +
+      '<div class="card" style="margin-bottom:16px"><div class="card-h"><h2>Grynieji pas trenerius</h2><span class="meta hide-sm">Kai treneris atiduoda pinigus, spauskite „Perdavė“</span></div><div class="card-b">' + cashRows() + '</div></div>' +
       '<div class="toolbar"><div class="seg" role="group" aria-label="Filtras">' + [['all', 'Visi'], ['late', 'Vėluoja'], ['wait', 'Laukiama'], ['paid', 'Apmokėta']].map(function (f) { var c = S.members.filter(function (m) { return f[0] === 'all' || statusOf(m) === f[0]; }).length; return '<button type="button" data-payf="' + f[0] + '" aria-pressed="' + (UI.payFilter === f[0]) + '">' + f[1] + '<span class="n">' + c + '</span></button>'; }).join('') + '</div></div>' +
       '<div class="card scroll"><table class="table"><thead><tr><th>Narys</th><th class="num">Suma</th><th>Būsena</th><th class="num">Veiksmas</th></tr></thead><tbody>' + (rows || '<tr><td colspan="4" class="empty">Visi sumokėjo. Puiku!</td></tr>') + '</tbody></table></div>';
   };
@@ -473,6 +521,7 @@
   var TPL = {
     req: 'Laba diena! {mėnuo} mokestis už {vardas} ({grupė}): {suma}. Apmokėti: kallo.lt/p/4k2m',
     rem: 'Primename: {mėnuo} mokestis už {vardas} — {suma}. Jei jau sumokėjote, ačiū ir nekreipkite dėmesio. kallo.lt/p/4k2m',
+    cash: 'Primename: {mėnuo} mokestis už {vardas} — {suma}. Galite atnešti grynais į treniruotę arba sumokėti čia: kallo.lt/p/4k2m',
     cancel: 'Laba diena! Šiandien {grupė} treniruotės nebus. Susitiksime kitą kartą įprastu laiku. Klubas „Startas“'
   };
   function fill(t, m) {
@@ -492,7 +541,7 @@
       '<div class="page-h"><div><h1>Žinutės tėvams</h1><p>SMS ar el. laiškas vienai grupei arba visiems.</p></div></div>' +
       '<div class="msg-wrap"><div class="card"><div class="card-b">' +
         '<div class="field"><label for="msgTo">Kam siųsti</label><select id="msgTo"><option value="late"' + (UI.msgTo === 'late' ? ' selected' : '') + '>Nesumokėjusiems</option><option value="all"' + (UI.msgTo === 'all' ? ' selected' : '') + '>Visiems tėvams</option>' + S.groups.map(function (g) { return '<option value="' + g.id + '"' + (UI.msgTo === g.id ? ' selected' : '') + '>' + esc(g.name) + '</option>'; }).join('') + '</select></div>' +
-        '<div class="field"><label>Šablonai</label><div class="tpls"><button type="button" data-tpl="req">Mokėjimo prašymas</button><button type="button" data-tpl="rem">Priminimas</button><button type="button" data-tpl="cancel">Treniruotė atšaukta</button></div></div>' +
+        '<div class="field"><label>Šablonai</label><div class="tpls"><button type="button" data-tpl="req">Mokėjimo prašymas</button><button type="button" data-tpl="rem">Priminimas</button><button type="button" data-tpl="cash">Grynais į treniruotę</button><button type="button" data-tpl="cancel">Treniruotė atšaukta</button></div></div>' +
         '<div class="field"><label for="msgText">Tekstas <span class="meta">— {vardas}, {grupė}, {suma}, {mėnuo} pakeičiami automatiškai</span></label><textarea id="msgText">' + esc(UI.msgText) + '</textarea></div>' +
         '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between"><span class="meta" id="msgMeta">' + rec.length + ' ' + plural(rec.length, 'gavėjas', 'gavėjai', 'gavėjų') + ' · ' + parts + ' SMS dalis</span><button class="btn btn-coral" data-act="send"' + (rec.length ? '' : ' disabled') + '>Siųsti ' + rec.length + ' ' + plural(rec.length, 'gavėjui', 'gavėjams', 'gavėjų') + '</button></div>' +
       '</div><div class="card-h" style="border-top:1px solid var(--line)"><h2>Išsiųsta</h2></div><div class="card-b log">' + log + '</div></div>' +
@@ -512,7 +561,7 @@
         '</div></div>' +
         '<div class="card"><div class="card-h"><h2>Kanalai ir mokėjimai</h2></div><div class="card-b">' +
           sw('sms', 'SMS žinutės', 'Mokamos pagal savikainą') + sw('email', 'El. laiškai', 'Nemokami') +
-          '<div class="field" style="margin-top:12px"><label for="method">Kaip tėvai moka</label><select id="method"><option value="paysera"' + (st.method === 'paysera' ? ' selected' : '') + '>Paysera apmokėjimo nuoroda</option><option value="bank"' + (st.method === 'bank' ? ' selected' : '') + '>Bankinis pavedimas su unikalia paskirtimi</option></select></div>' +
+          '<div class="field" style="margin-top:12px"><label for="method">Kaip tėvai moka</label><select id="method"><option value="mixed"' + (st.method === 'mixed' ? ' selected' : '') + '>Grynais treneriui arba nuoroda</option><option value="paysera"' + (st.method === 'paysera' ? ' selected' : '') + '>Paysera apmokėjimo nuoroda</option><option value="bank"' + (st.method === 'bank' ? ' selected' : '') + '>Bankinis pavedimas su unikalia paskirtimi</option></select></div>' +
           '<div class="field"><label for="due">Mokėjimo terminas (mėnesio diena)</label><input id="due" type="number" min="1" max="28" value="' + st.due + '"></div>' +
         '</div></div>' +
         '<div class="card"><div class="card-h"><h2>Planas</h2></div><div class="card-b"><p style="margin:0 0 6px">„Klubas“ — 1 € už aktyvų narį per mėnesį.</p><p class="meta" style="margin:0">Šį mėnesį: ' + S.members.length + ' ' + plural(S.members.length, 'aktyvus narys', 'aktyvūs nariai', 'aktyvių narių') + ' = ' + eur(Math.max(39, S.members.length)) + '</p></div></div>' +
@@ -529,7 +578,7 @@
     var d = $('#drawer');
     d.innerHTML = '<button class="x" type="button" data-act="close" aria-label="Uždaryti">×</button>' +
       '<div class="who"><span class="av" style="width:48px;height:48px;font-size:16px">' + initials(m.name) + '</span><span><h2 id="drawerTitle">' + esc(m.name) + '</h2><small>' + esc(g.name) + ' · narys nuo ' + m.since.replace('-', ' m. ') + ' mėn.</small></span></div>' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap">' + (st !== 'paid' ? '<button class="btn btn-coral btn-sm" data-remind="' + m.id + '">Siųsti priminimą</button><button class="btn btn-ghost btn-sm" data-markpaid="' + m.id + '">Pažymėti apmokėtu</button>' : '<span class="chip paid">' + cap(MONTHS[TODAY.m]) + ' apmokėta</span>') + '</div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">' + (st !== 'paid' ? '<button class="btn btn-coral btn-sm" data-remind="' + m.id + '">Siųsti priminimą</button><button class="btn btn-ghost btn-sm" data-cash="' + m.id + '" data-by="' + esc(g.coach) + '">Gavo grynais</button><button class="btn btn-ghost btn-sm" data-markpaid="' + m.id + '">Pavedimu</button>' : '<span class="chip paid">' + cap(MONTHS[TODAY.m]) + ' apmokėta</span><span class="meta" style="align-self:center">' + esc(viaText(viaOf(m))) + '</span>') + '</div>' +
       '<div class="card"><div class="card-b"><dl class="dl"><dt>Tėvai</dt><dd>' + esc(m.parent) + '</dd><dt>Telefonas</dt><dd>' + esc(m.phone) + '</dd><dt>El. paštas</dt><dd>' + esc(m.email) + '</dd><dt>Mokestis</dt><dd>' + eur(m.fee) + ' / mėn.' + (m.discount ? '<br><span class="meta">' + esc(m.discount) + '</span>' : '') + '</dd><dt>Treneris</dt><dd>' + esc(g.coach) + '</dd></dl></div></div>' +
       '<div><b>Mokėjimai</b><div class="months" style="margin-top:8px">' + months + '</div></div>' +
       '<div><b>Lankomumas · ' + MONTHS[TODAY.m] + '</b><div class="dots" style="margin-top:8px">' + att.map(function (a) { return '<i class="' + (a.present.indexOf(m.id) >= 0 ? '' : 'no') + '" title="' + a.date + '"></i>'; }).join('') + '</div><p class="meta">' + att.filter(function (a) { return a.present.indexOf(m.id) >= 0; }).length + ' iš ' + att.length + ' treniruočių</p></div>';
@@ -550,10 +599,14 @@
     if (focusMain) { main.focus({ preventScroll: true }); window.scrollTo(0, 0); }
     save();
   }
-  function markPaid(id, silent) {
+  // how: 'bank' | 'link' | 'cash'; by: coach who took the cash (null = the owner took it)
+  function markPaid(id, silent, how, by) {
     var m = memberOf(id); if (!m) return;
-    S.payments[id][CUR] = 'paid'; logActivity('paid', m.name + ' sumokėjo ' + eur(m.fee));
-    if (!silent) toast(m.name + ' pažymėta(s) kaip sumokėjęs(-usi)');
+    how = how || 'bank'; by = by || null;
+    S.payments[id][CUR] = 'paid'; S.via[id] = { how: how, by: by };
+    var text = how === 'cash' ? m.name + ' sumokėjo grynais ' + eur(m.fee) + (by ? ' · gavo ' + by : '') : m.name + ' sumokėjo ' + eur(m.fee);
+    logActivity(how === 'cash' ? 'cash' : 'paid', text);
+    if (!silent) toast(how === 'cash' ? 'Grynais: ' + m.name + ', ' + eur(m.fee) : m.name + ' pažymėta(s) kaip sumokėjęs(-usi)');
   }
 
   // ---------- events ----------
@@ -563,6 +616,12 @@
     var ds = t.dataset;
     if (ds.view) { S.view = ds.view; render(true); return; }
     if (ds.member) { openMember(ds.member); return; }
+    if (ds.cash) { markPaid(ds.cash, false, 'cash', ds.by); render(); if (!$('#drawer').hidden) openMember(ds.cash); return; }
+    if (ds.handover) {
+      var c = cashByCoach().filter(function (x) { return x.coach === ds.handover; })[0];
+      S.handed[ds.handover] = c.sum; logActivity('cash', ds.handover + ' perdavė ' + eur(c.held) + ' grynųjų');
+      toast(ds.handover + ' perdavė ' + eur(c.held)); render(); return;
+    }
     if (ds.markpaid) { markPaid(ds.markpaid); render(); if (!$('#drawer').hidden) openMember(ds.markpaid); return; }
     if (ds.remind) { var m = memberOf(ds.remind); toast('Priminimas išsiųstas: ' + m.parent); logActivity('rem', 'Priminimas išsiųstas: ' + m.parent); render(); return; }
     if (ds.attgroup) { UI.attGroup = ds.attgroup; UI.attSel = null; render(); return; }
@@ -594,7 +653,7 @@
       case 'import':
         var pick = S.members.filter(function (x) { return statusOf(x) !== 'paid'; }).slice(0, 3);
         UI.imported = pick.map(function (x, k) { return { line: '2026-11-1' + (2 + k) + ' · ' + eur(x.fee) + ' · „KS-' + x.id.toUpperCase() + ' ' + x.name.split(' ')[0] + '“', who: x.name }; });
-        pick.forEach(function (x) { markPaid(x.id, true); });
+        pick.forEach(function (x) { markPaid(x.id, true, 'bank'); });
         toast('Sutikrinta: ' + pick.length + ' ' + plural(pick.length, 'mokėjimas', 'mokėjimai', 'mokėjimų') + ' pažymėti automatiškai'); render(); break;
       case 'send':
         var rec = recipients();
