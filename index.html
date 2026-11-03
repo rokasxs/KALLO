@@ -316,6 +316,100 @@
   .calc-grid div { display: grid; gap: 4px; min-width: 0; }
   .calc-grid b { font-size: 24px; font-variant-numeric: tabular-nums; }
   .calc-out .note { color: rgba(255, 252, 250, .55); font-size: 13px; }
+
+  /* ---------- custom form fields ---------- */
+  .field select, .field input { -webkit-appearance: none; appearance: none; transition: border-color .15s ease, box-shadow .15s ease; }
+  .field select { padding-right: 44px; font-weight: 600; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E8522F' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center; background-size: 15px; }
+  .field input:hover, .field select:hover { border-color: rgba(26,10,0,.24); }
+  .field input:focus, .field select:focus { border-color: var(--coral); box-shadow: 0 0 0 4px rgba(255,107,71,.16); }
+  .consent input { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid rgba(26,10,0,.25); background: #fff; display: grid; place-items: center; cursor: pointer; margin-top: 2px; transition: background .15s ease, border-color .15s ease; }
+  .consent input::after { content: "✓"; color: #fff; font-size: 13px; font-weight: 700; transform: scale(0); transition: transform .15s ease; }
+  .consent input:checked { background: var(--coral); border-color: var(--coral); }
+  .consent input:checked::after { transform: scale(1); }
+  .slider input[type="range"] { -webkit-appearance: none; appearance: none; height: 8px; border-radius: 8px; cursor: pointer;
+    background: linear-gradient(to right, var(--coral) 0 var(--p, 50%), #EFE7E1 var(--p, 50%) 100%); }
+  .slider input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%; background: #fff; border: 3px solid var(--coral); box-shadow: 0 4px 14px rgba(232,82,47,.35); transition: transform .15s ease; }
+  .slider input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.15); }
+  .slider input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 3px solid var(--coral); box-shadow: 0 4px 14px rgba(232,82,47,.35); }
+  .slider input[type="range"]::-moz-range-track { background: transparent; }
+  .slider input[type="range"]:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(255,107,71,.2); }
+
+  /* ---------- scroll progress ---------- */
+  .progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--coral); transform-origin: left; transform: scaleX(var(--sp, 0)); }
+
+  /* ---------- hero entrance + atmosphere ---------- */
+  .hero { position: relative; overflow: hidden; }
+  .hero .wrap { position: relative; z-index: 1; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(70px); pointer-events: none; z-index: 0; }
+  .orb.a { width: 520px; height: 520px; background: rgba(255,107,71,.20); right: -140px; top: -160px; animation: drift 16s ease-in-out infinite alternate; }
+  .orb.b { width: 380px; height: 380px; background: rgba(29,158,117,.10); left: -160px; bottom: -180px; animation: drift 20s ease-in-out infinite alternate-reverse; }
+  @keyframes drift { to { transform: translate(-60px, 50px) scale(1.12); } }
+  .hero-copy > * { animation: up .8s cubic-bezier(.2,.8,.2,1) both; }
+  .hero-copy > :nth-child(2) { animation-delay: .08s; } .hero-copy > :nth-child(3) { animation-delay: .16s; }
+  .hero-copy > :nth-child(4) { animation-delay: .24s; } .hero-copy > :nth-child(5) { animation-delay: .32s; }
+  @keyframes up { from { transform: translateY(22px); } }
+  .stage { perspective: 1400px; animation: rise 1s .2s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes rise { from { transform: translateY(40px) scale(.97); } }
+  .dash { transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease; transform-style: preserve-3d; will-change: transform; }
+
+  /* ---------- reveal on scroll (only added by JS to content below the fold) ---------- */
+  .rv { opacity: .3; transform: translateY(28px); transition: opacity .7s ease, transform .8s cubic-bezier(.2,.8,.2,1); }
+  .rv.in { opacity: 1; transform: none; }
+  .feat { transition: transform .25s ease, box-shadow .25s ease, opacity .7s ease; }
+  .feat:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -24px rgba(26,10,0,.35); }
+  .plan { transition: transform .25s ease, box-shadow .25s ease, opacity .7s ease; }
+  .plan:hover { transform: translateY(-4px); box-shadow: 0 22px 44px -26px rgba(26,10,0,.35); }
+
+  /* ---------- sticky scroll story ---------- */
+  .story { background: var(--blush); }
+  .story-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .story-steps { display: grid; }
+  .sstep { min-height: 62vh; display: grid; align-content: center; gap: 12px; padding-block: 24px; transition: opacity .4s ease; }
+  .story.js .sstep { opacity: .32; }
+  .story.js .sstep.act { opacity: 1; }
+  .sstep:first-child { min-height: 46vh; align-content: start; padding-top: 0; }
+  .snum { font-family: var(--serif); font-size: 46px; line-height: 1; color: var(--coral); }
+  .sstep h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 3vw, 38px); line-height: 1.1; letter-spacing: -0.015em; }
+  .sstep p { color: var(--muted); font-size: 18px; max-width: 46ch; }
+  .story-cta { display: grid; gap: 16px; margin-top: 18px; justify-items: start; }
+  .story-phone { position: sticky; top: 110px; }
+  .phone.big { width: 300px; margin-left: auto; }
+  .screens { position: relative; flex: 1; }
+  .scr-x { position: absolute; inset: 0; display: flex; flex-direction: column; opacity: 0; transform: translateY(18px) scale(.98); transition: opacity .45s ease, transform .55s cubic-bezier(.2,.8,.2,1); }
+  .scr-x.on { opacity: 1; transform: none; }
+  .paid-hero { display: grid; justify-items: center; gap: 6px; padding: 26px 16px 14px; text-align: center; }
+  .okc { width: 64px; height: 64px; border-radius: 50%; background: var(--paid); color: #fff; display: grid; place-items: center; font-size: 30px; font-weight: 700; box-shadow: 0 0 0 10px var(--paid-bg); }
+  .scr-x.on .okc { animation: pop .6s cubic-bezier(.2,1.4,.4,1) both .15s; }
+  @keyframes pop { from { transform: scale(.3); opacity: 0; } }
+  .paid-hero strong { font-size: 30px; letter-spacing: -0.02em; margin-top: 8px; }
+  .paid-hero small { color: var(--muted); font-size: 13px; }
+  .chip-pill { margin-top: 4px; font-size: 12px; font-weight: 700; color: var(--paid); background: var(--paid-bg); padding: 4px 12px; border-radius: 999px; }
+  .notes { display: grid; gap: 8px; padding: 12px; }
+  .notes div { display: flex; gap: 10px; align-items: center; font-size: 13px; background: var(--blush); border-radius: 12px; padding: 10px 12px; }
+  .notes i { width: 8px; height: 8px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
+  .mini-k { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 14px 12px 6px; }
+  .mini-k div { background: var(--blush); border-radius: 12px; padding: 10px 12px; display: grid; }
+  .mini-k small { font-size: 11.5px; color: var(--muted); } .mini-k b { font-size: 20px; letter-spacing: -0.02em; }
+  .late-t { color: var(--late); }
+  .mini-g { display: grid; gap: 12px; padding: 12px 14px; }
+  .mini-g div { display: grid; gap: 5px; font-size: 12.5px; font-weight: 600; }
+  .mini-g i { display: block; height: 7px; border-radius: 7px; background: linear-gradient(to right, var(--paid) 0 var(--w), #EFE7E1 var(--w) 100%); }
+  .scr-x.on .mini-g i { animation: grow 1s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes grow { from { background-size: 0 100%; } }
+  .inline-phone { display: none; }
+  @media (max-width: 900px) {
+    .story-grid { grid-template-columns: minmax(0, 1fr); }
+    .sstep, .sstep:first-child { min-height: 0; padding-block: 18px 30px; }
+    .story.js .sstep { opacity: 1; }
+    .story.clones .story-phone { display: none; }
+    .story-phone { position: static; }
+    .phone.big { margin: 0 auto; width: 260px; }
+    .inline-phone { display: block; width: 240px; margin-top: 18px; }
+    .inline-phone .screens { min-height: 340px; }
+    .inline-phone .scr-x { position: absolute; opacity: 1; transform: none; }
+  }
 </style>
 </head>
 <body>
@@ -337,6 +431,7 @@
 </nav>
 
 <header class="hero">
+  <span class="orb a" aria-hidden="true"></span><span class="orb b" aria-hidden="true"></span>
   <div class="wrap">
     <div class="hero-copy">
       <span class="pill">Sporto klubams ir būreliams · <b>14 dienų nemokamai</b></span>
@@ -502,46 +597,83 @@
   </div>
 </section>
 
-<section class="app" id="programele" aria-labelledby="app-h">
+<section class="story" id="programele" aria-labelledby="app-h">
   <div class="wrap">
-    <div class="phones" aria-hidden="true">
-      <div class="phone">
-        <div class="screen">
-          <div class="notch"></div>
-          <div class="scr-head"><small>Trenerio ekranas · 17:00</small><b>Šokiai 7–9 m.</b></div>
-          <div class="att">
-            <div>Ema K.<span class="tick on">✓</span></div>
-            <div>Gabija S.<span class="tick on">✓</span></div>
-            <div>Austėja V.<span class="tick off"></span></div>
-            <div>Liepa D.<span class="tick on">✓</span></div>
-            <div>Urtė B.<span class="tick on">✓</span></div>
-            <div>Smiltė A.<span class="tick on">✓</span></div>
-          </div>
-          <div class="scr-foot"><span>Išsaugoti (5/6)</span></div>
-        </div>
-      </div>
-      <div class="phone">
-        <div class="screen">
-          <div class="notch"></div>
-          <div class="scr-head"><small>Žinutė tėvams</small><b>Kallo · Startas</b></div>
-          <div class="sms-time">Lapkr. 1 d., 09:00</div>
-          <div class="sms">Laba diena! Lapkričio mokestis už Emos šokius: <b>30 €</b>. Apmokėti: <a>kallo.lt/p/4k2m</a></div>
-          <div class="paybox"><small>Apmokėti iki lapkr. 10 d.</small><strong>30,00 €</strong><small>Sporto klubas „Startas“</small></div>
-          <div class="scr-foot"><span>Mokėti per banką</span></div>
-        </div>
-      </div>
-    </div>
-    <div style="display: grid; gap: 22px;">
-      <span class="eyebrow">Telefone</span>
+    <div class="head">
+      <span class="eyebrow">Kaip tai atrodo telefone</span>
       <h2 id="app-h">Treneris pažymi. <em>Tėvai sumoka.</em> Jūs matote.</h2>
-      <p class="lede">Kallo veikia bet kuriame telefone tiesiog per nuorodą: treneriai žymi lankomumą, tėvai sumoka vienu paspaudimu, o jūs suvestinę matote telefone ar kompiuteryje.</p>
-      <ul class="checks">
-        <li>Treneriui nereikia jokios paskyros ar programos, užtenka nuorodos</li>
-        <li>Tėvai moka per savo banką, be registracijos</li>
-        <li>Pranešimas jums, kai ateina mokėjimas arba kas nors vėluoja</li>
-      </ul>
-      <p class="note">Mobilioji programėlė „iOS“ ir „Android“ telefonams kuriama. Steigėjų klubai ją gaus pirmieji.</p>
-      <a href="/demo/" class="btn btn-coral" style="justify-self:start">Išbandyti demo be registracijos →</a>
+      <p class="lede">Kallo veikia bet kuriame telefone tiesiog per nuorodą. Slinkite žemyn ir pamatysite vieną mėnesį iš arti.</p>
+    </div>
+    <div class="story-grid">
+      <div class="story-steps">
+        <article class="sstep act" data-screen="0">
+          <span class="snum">01</span>
+          <h3>Treneris pažymi lankomumą</h3>
+          <p>Atsidaro nuorodą telefone ir per 10 sekundžių pažymi, kas atėjo. Jokios programos, jokios paskyros.</p>
+        </article>
+        <article class="sstep" data-screen="1">
+          <span class="snum">02</span>
+          <h3>Mėnesio 1 d. tėvai gauna žinutę</h3>
+          <p>SMS ar el. laiškas su tikslia suma ir apmokėjimo nuoroda. Tėvai moka per savo banką, be registracijos.</p>
+        </article>
+        <article class="sstep" data-screen="2">
+          <span class="snum">03</span>
+          <h3>Mokėjimas pažymimas pats</h3>
+          <p>Kai pinigai ateina, būsena tampa „Apmokėta“ ir priminimai tam vaikui sustoja. Jūs gaunate pranešimą.</p>
+        </article>
+        <article class="sstep" data-screen="3">
+          <span class="snum">04</span>
+          <h3>Jūs matote visą klubą</h3>
+          <p>Kiek surinkta, kas vėluoja ir kaip lanko kiekviena grupė — telefone ar kompiuteryje.</p>
+          <div class="story-cta">
+            <p class="note">Mobilioji programėlė „iOS“ ir „Android“ telefonams kuriama. Steigėjų klubai ją gaus pirmieji.</p>
+            <a href="/demo/" class="btn btn-coral">Išbandyti demo be registracijos →</a>
+          </div>
+        </article>
+      </div>
+      <div class="story-phone" aria-hidden="true">
+        <div class="phone big"><div class="screen"><div class="notch"></div>
+          <div class="screens">
+            <div class="scr-x on" data-i="0">
+              <div class="scr-head"><small>Trenerio ekranas · 17:00</small><b>Šokiai 7–9 m.</b></div>
+              <div class="att">
+                <div>Ema K.<span class="tick on">✓</span></div>
+                <div>Gabija S.<span class="tick on">✓</span></div>
+                <div>Austėja V.<span class="tick off"></span></div>
+                <div>Liepa D.<span class="tick on">✓</span></div>
+                <div>Urtė B.<span class="tick on">✓</span></div>
+                <div>Smiltė A.<span class="tick on">✓</span></div>
+              </div>
+              <div class="scr-foot"><span>Išsaugoti (5/6)</span></div>
+            </div>
+            <div class="scr-x" data-i="1">
+              <div class="scr-head"><small>Žinutė tėvams</small><b>Kallo · Startas</b></div>
+              <div class="sms-time">Lapkr. 1 d., 09:00</div>
+              <div class="sms">Laba diena! Lapkričio mokestis už Emos šokius: <b>30 €</b>. Apmokėti: <a>kallo.lt/p/4k2m</a></div>
+              <div class="paybox"><small>Apmokėti iki lapkr. 10 d.</small><strong>30,00 €</strong><small>Sporto klubas „Startas“</small></div>
+              <div class="scr-foot"><span>Mokėti per banką</span></div>
+            </div>
+            <div class="scr-x" data-i="2">
+              <div class="scr-head"><small>Mokėjimas gautas</small><b>Lapkričio mokestis</b></div>
+              <div class="paid-hero"><span class="okc">✓</span><strong>30,00 €</strong><small>Ema K. · Šokiai 7–9 m.</small><span class="chip-pill">Apmokėta</span></div>
+              <div class="notes">
+                <div><i></i>Priminimai Emos tėvams sustabdyti</div>
+                <div><i></i>Rūta J. gavo pranešimą</div>
+              </div>
+            </div>
+            <div class="scr-x" data-i="3">
+              <div class="scr-head"><small>Savininko suvestinė</small><b>Lapkritis</b></div>
+              <div class="mini-k"><div><small>Surinkta</small><b>2 345 €</b></div><div><small>Vėluoja</small><b class="late-t">3</b></div></div>
+              <div class="mini-g">
+                <div><span>Krepšinis U-10</span><i style="--w:92%"></i></div>
+                <div><span>Krepšinis U-12</span><i style="--w:84%"></i></div>
+                <div><span>Šokiai 7–9 m.</span><i style="--w:76%"></i></div>
+                <div><span>Karatė</span><i style="--w:88%"></i></div>
+              </div>
+            </div>
+          </div>
+        </div></div>
+      </div>
     </div>
   </div>
 </section>
@@ -721,6 +853,7 @@
     var m = +$('cMembers').value, f = +$('cFee').value, l = +$('cLate').value, h = +$('cHours').value;
     var price = m <= 30 ? 29 : (m >= 200 ? Math.round(m * 0.8) : Math.max(39, m));
     var total = m * f;
+    ['cMembers', 'cFee', 'cLate', 'cHours'].forEach(function (id) { var el = $(id); el.style.setProperty('--p', ((el.value - el.min) / (el.max - el.min) * 100) + '%'); });
     $('oMembers').textContent = m; $('oFee').textContent = f + ' €'; $('oLate').textContent = l + ' %'; $('oHours').textContent = h + ' val.';
     $('rPrice').textContent = sp(price) + ' € / mėn.';
     $('rShare').textContent = (price / total * 100).toFixed(1).replace('.', ',') + ' % nuo per mėnesį surenkamų ' + sp(total) + ' €';
@@ -729,6 +862,68 @@
   }
   ['cMembers', 'cFee', 'cLate', 'cHours'].forEach(function (id) { var el = $(id); if (el) el.addEventListener('input', calc); });
   if ($('cMembers')) calc();
+
+  // ---------- motion: progress bar, hero tilt, scroll reveals, sticky story ----------
+  var nav = document.querySelector('nav.top');
+  if (nav) { var pb = document.createElement('span'); pb.className = 'progress'; pb.setAttribute('aria-hidden', 'true'); nav.appendChild(pb); }
+  var story = document.querySelector('.story');
+  var steps = story ? [].slice.call(story.querySelectorAll('.sstep')) : [];
+  var screens = story ? [].slice.call(story.querySelectorAll('.story-phone .scr-x')) : [];
+
+  // Mobile: give every step its own small phone, since the sticky one is hidden there
+  if (story) {
+    steps.forEach(function (st) {
+      var src = screens[+st.dataset.screen]; if (!src) return;
+      var ph = document.createElement('div'); ph.className = 'phone inline-phone'; ph.setAttribute('aria-hidden', 'true');
+      ph.innerHTML = '<div class="screen"><div class="notch"></div><div class="screens"></div></div>';
+      var c = src.cloneNode(true); c.classList.add('on'); ph.querySelector('.screens').appendChild(c);
+      var cta = st.querySelector('.story-cta'); st.insertBefore(ph, cta || null);
+    });
+    story.classList.add('clones');
+  }
+
+  var revealEls = [];
+  if (!reduce) {
+    if (story) story.classList.add('js');
+    var sel = '.pain .head, .pain-card, .why > div, #funkcijos .head, .feat, .step, .tl, .cmp, .calc, .story .head, .pilot, .plan, .trust > div, .faq details, .signup .wrap > *';
+    [].slice.call(document.querySelectorAll(sel)).forEach(function (el) {
+      if (el.getBoundingClientRect().top > window.innerHeight * 0.92) {
+        var sib = [].slice.call(el.parentNode.children).filter(function (x) { return x.matches(sel); });
+        el.style.transitionDelay = Math.min(sib.indexOf(el), 5) * 70 + 'ms';
+        el.classList.add('rv'); revealEls.push(el);
+      }
+    });
+    // Hero dashboard tilts toward the pointer (mouse only)
+    var stage = document.querySelector('.stage'), dash = document.querySelector('.dash');
+    if (stage && dash && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      stage.addEventListener('mousemove', function (e) {
+        var r = stage.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+        dash.style.transform = 'rotateY(' + (x * 7).toFixed(2) + 'deg) rotateX(' + (-y * 6).toFixed(2) + 'deg) translateZ(0)';
+      });
+      stage.addEventListener('mouseleave', function () { dash.style.transform = ''; });
+    }
+  }
+
+  var ticking = false;
+  function onScroll() {
+    ticking = false;
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    if (nav) nav.style.setProperty('--sp', max > 0 ? (h.scrollTop / max).toFixed(4) : 0);
+    var vh = window.innerHeight;
+    for (var i = revealEls.length - 1; i >= 0; i--) {
+      if (revealEls[i].getBoundingClientRect().top < vh * 0.88) { revealEls[i].classList.add('in'); revealEls.splice(i, 1); }
+    }
+    if (steps.length && !reduce) {
+      var best = 0, bestD = 1e9;
+      steps.forEach(function (st, k) { var r = st.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - vh / 2); if (d < bestD) { bestD = d; best = k; } });
+      steps.forEach(function (st, k) { st.classList.toggle('act', k === best); });
+      var si = +steps[best].dataset.screen;
+      screens.forEach(function (sc, k) { sc.classList.toggle('on', k === si); });
+    }
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
 })();
 </script>
 </body>
