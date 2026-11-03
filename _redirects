@@ -1,0 +1,3 @@
+# Keep internal folders off the public website
+/crm/*   /404.html   404!
+/api/*   /404.html   404!
