@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Kallo demo Fightersland klubui: kas sumokėjo, priminimai ir grynieji pas trenerius.">
+<meta name="color-scheme" content="light">
+<meta name="description" content="Kallo demo Fightersland klubui: kas sumokėjo ir automatiniai priminimai.">
 <meta property="og:title" content="Fightersland × Kallo">
 <meta property="og:description" content="Kas sumokėjo – matosi iš karto. Priminimai – patys. Demo su išgalvotais nariais.">
 <meta property="og:image" content="https://kallo.lt/og-klubams.png">
@@ -16,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
 <style>
-/* Kallo app shell (same brand as kallo.lt/demo): coral demo bar, dark sidebar on desktop, bottom tab bar on phones. Light and dark themes; the club logo always sits on a white tile. */
+/* Kallo app shell (same brand as kallo.lt/demo): coral demo bar, dark sidebar on desktop, bottom tab bar on phones. Light theme only for now; the club logo sits on a white tile. */
 :root{
   --coral:#FF6B47; --coral-deep:#E8522F; --white:#fff; --brand-ink:#1A0A00; --brand-cream:#FFFCFA; --logo-bg:#fff;
   --bg:#FFFCFA; --surface:#fff; --text:#1A0A00; --muted:#6B5B52; --line:rgba(26,10,0,.09); --soft:#FFF5F0;
@@ -25,16 +26,7 @@
   --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#130A06; --surface:#1E130D; --text:#F7EEE9; --muted:#B5A59C; --line:rgba(255,236,226,.11); --soft:#2A1B13;
-  --strong:#FFF5F0; --on-strong:#1A0A00; --side:#0B0503; --bezel:#000; --bubble:#33241B; --track:#3A2A21; --scrim:rgba(0,0,0,.55);
-  --paid:#3FC896; --paid-bg:rgba(29,158,117,.18); --wait:#E6AE52; --wait-bg:rgba(183,121,31,.2); --late:#F07A7A; --late-bg:rgba(214,69,69,.2); --none-bg:#2E2119; --link:#FF8A6B;
-  color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#130A06; --surface:#1E130D; --text:#F7EEE9; --muted:#B5A59C; --line:rgba(255,236,226,.11); --soft:#2A1B13;
-  --strong:#FFF5F0; --on-strong:#1A0A00; --side:#0B0503; --bezel:#000; --bubble:#33241B; --track:#3A2A21; --scrim:rgba(0,0,0,.55);
-  --paid:#3FC896; --paid-bg:rgba(29,158,117,.18); --wait:#E6AE52; --wait-bg:rgba(183,121,31,.2); --late:#F07A7A; --late-bg:rgba(214,69,69,.2); --none-bg:#2E2119; --link:#FF8A6B;
-  color-scheme:dark}
+
 *{box-sizing:border-box}
 body{margin:0;font-family:var(--sans);font-size:15px;line-height:1.5;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;transition:background .25s ease,color .25s ease}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:31;background:var(--coral)}
@@ -150,7 +142,8 @@ select:focus,textarea:focus{outline:none;border-color:var(--coral);box-shadow:0 
 .mrow .money{text-align:right;flex-shrink:0;display:grid;gap:3px;justify-items:end}
 .mrow .money b{font-variant-numeric:tabular-nums}
 .mrow .acts{display:flex;gap:6px;flex-shrink:0}
-@media (max-width:640px){.mrow{flex-wrap:wrap}.mrow .acts{width:100%;padding-left:46px}.mrow .acts .btn{flex:1}}
+.mob-only{display:none}
+@media (max-width:640px){.toolbar{width:100%}.toolbar .seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%}.toolbar .seg button{padding:7px 4px}.toolbar .seg .n{display:none}.toolbar select{width:100%}.mrow .acts{display:none}.mrow{padding:12px 16px}.gh{padding:12px 16px 9px}.mob-only{display:block}.page-h{margin-bottom:16px}}
 .cash-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
 .cash-row:first-child{padding-top:0}.cash-row:last-child{border-bottom:0;padding-bottom:0}
 .cash-row small{display:block;color:var(--muted);font-size:12.5px}
@@ -274,10 +267,8 @@ footer.note{margin-top:28px;font-size:12.5px;color:var(--muted);max-width:70ch}
   <span class="txt" id="demoTxt"></span>
   <span class="acts">
     <button type="button" class="day" data-act="day" id="dayBtn"></button>
-    <button type="button" data-act="reset" id="resetBtn"></button>
     <button type="button" class="theme" data-act="intro" id="introBtn">?</button>
-    <button type="button" class="theme" data-act="theme" id="themeBtn"></button>
-    <span class="lang" role="group" aria-label="Language"><button type="button" data-lang="lt" id="langLt">LT</button><button type="button" data-lang="en" id="langEn">EN</button></span>
+    <button type="button" class="theme" data-act="menu" id="menuBtn">⋯</button>
   </span>
 </div>
 
@@ -310,7 +301,7 @@ const I={
 /* ---------- language and theme ---------- */
 const S={lang:'lt',view:'pay',persona:'adult',status:'unpaid',group:'all',logF:'all',logN:10,chan:'sms',deacc:false,dr:null,report:null,
   rules:{pre:true,day:true,l3:true,l10:true,l21:true},tpl:null};
-try{const l=localStorage.getItem('fl-demo-lang');if(l==='lt'||l==='en')S.lang=l;const th=localStorage.getItem('fl-demo-theme');if(th==='light'||th==='dark')document.documentElement.dataset.theme=th}catch(e){}
+try{const l=localStorage.getItem('fl-demo-lang');if(l==='lt'||l==='en')S.lang=l}catch(e){}
 const L=(lt,en)=>S.lang==='lt'?lt:en;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const isDark=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches};
@@ -422,22 +413,22 @@ const RULES=[
   {k:'pre',off:-3,chan:'sms',w:'w1',name:['3 d. prieš terminą','3 days before'],tone:['Draugiškai','Friendly'],via:['SMS','SMS']},
   {k:'day',off:0,chan:'email',w:'w2',name:['Mokėjimo dieną','On the due date'],tone:['Trumpai primename','Short note'],via:['El. laiškas','Email']},
   {k:'l3',off:3,chan:'sms',w:'w3',name:['Vėluoja 3 d.','3 days late'],tone:['Mandagiai','Polite'],via:['SMS','SMS']},
-  {k:'l10',off:10,chan:'sms',w:'w4',name:['Vėluoja 10 d.','10 days late'],tone:['Griežčiau','Firmer'],via:['SMS + žinutė treneriui','SMS + note to coach']},
+  {k:'l10',off:10,chan:'sms',w:'w4',name:['Vėluoja 10 d.','10 days late'],tone:['Griežčiau','Firmer'],via:['SMS + pranešimas jums','SMS + a note to you']},
   {k:'l21',off:21,chan:'task',w:'w5',name:['Vėluoja 21 d.','21 days late'],tone:['Paskambinkite','Give them a call'],via:['Užduotis jums','Task for you']}];
 const RULE=k=>RULES.find(r=>r.k===k);
 const lvlOf=m=>m.due>0?'pre':m.due===0?'day':m.due>-10?'l3':'l10';
 const DEF_TPL={
- lt:{pre:'Labas, {vardas}! {data} – Fightersland mokestis {suma}.{vaikas} Atneškite grynais treneriui ({treneris}) per treniruotę. Iki!',
-     day:'Labas, {vardas}! Šiandien mokėjimo diena: {suma}.{vaikas} Grynus atiduokite treneriui ({treneris}) per treniruotę.',
-     l3:'Labas, {vardas}! Primename: {suma} vėluoja {dienos} d.{vaikas} Atneškite grynais į kitą treniruotę. Jei jau atidavėte – ačiū!',
-     l10:'Labas, {vardas}. Mokestis {suma} vėluoja jau {dienos} d.{vaikas} Prašome atnešti grynais iki {terminas}, kitaip narystė bus sustabdyta. Jei sunku – pasakykite treneriui.',
-     l21:'Paskambinti: {kam}, {telefonas}.{vaikas} {suma} grynais vėluoja {dienos} d.'},
- en:{pre:'Hi {vardas}! {data}: your Fightersland fee is {suma}.{vaikas} Please bring it in cash to your coach ({treneris}) at training. See you!',
-     day:'Hi {vardas}! Today is payment day: {suma}.{vaikas} Hand the cash to your coach ({treneris}) at training.',
+ lt:{pre:'Labas, {vardas}! {data} – Fightersland mokestis {suma}.{vaikas} Atneškite grynais į treniruotę. Iki!',
+     day:'Labas, {vardas}! Šiandien mokėjimo diena: {suma}.{vaikas} Atneškite grynais į treniruotę.',
+     l3:'Labas, {vardas}! Primename: {suma} vėluoja {dienos} d.{vaikas} Atneškite grynais į kitą treniruotę. Jei jau sumokėjote – ačiū!',
+     l10:'Labas, {vardas}. Mokestis {suma} vėluoja jau {dienos} d.{vaikas} Prašome atnešti grynais iki {terminas}, kitaip narystė bus sustabdyta. Jei sunku – parašykite.',
+     l21:'Paskambinti: {kam}, {telefonas}.{vaikas} {suma} vėluoja {dienos} d.'},
+ en:{pre:'Hi {vardas}! {data}: your Fightersland fee is {suma}.{vaikas} Please bring it in cash to training. See you!',
+     day:'Hi {vardas}! Today is payment day: {suma}.{vaikas} Please bring it in cash to training.',
      l3:'Hi {vardas}! Quick reminder: {suma} is {dienos} days late.{vaikas} Please bring the cash to your next session. If you already paid, thank you!',
-     l10:'Hello {vardas}. Your fee of {suma} is now {dienos} days late.{vaikas} Please bring the cash by {terminas} or the membership will be paused. If money is tight, tell your coach.',
-     l21:'Call {kam}, {telefonas}.{vaikas} {suma} in cash is {dienos} days late.'}};
-const PH=['vardas','suma','data','treneris','dienos','terminas','vaikas'];
+     l10:'Hello {vardas}. Your fee of {suma} is now {dienos} days late.{vaikas} Please bring the cash by {terminas} or the membership will be paused. If money is tight, just reply.',
+     l21:'Call {kam}, {telefonas}.{vaikas} {suma} is {dienos} days late.'}};
+const PH=['vardas','suma','data','dienos','terminas','vaikas'];
 
 /* ---------- build sample data (also used by "Atkurti") ---------- */
 function at(d,h,mi){const x=new Date(d);x.setHours(h,mi||0,0,0);return x}
@@ -445,7 +436,7 @@ function seed(){
   DAY=0;S.report=null;S.rules={pre:true,day:true,l3:true,l10:true,l21:true};S.tpl=JSON.parse(JSON.stringify(DEF_TPL));
   M=RAW.split('\n').map((line,i)=>{const f=line.split('|');const m={id:i+1,name:f[0],first:f[0].split(' ')[0],tags:f[1].split(' '),plan:f[2],due:+f[3],parent:null,age:null,cash:null,remToday:false};
     let rest=f.slice(4);if(rest[0]&&!rest[0].startsWith('cash:')){m.parent=rest[0];m.age=+rest[1];rest=rest.slice(2)}
-    if(rest[0])m.cash=rest[0].split(':')[1];m.group=TAG2G[m.tags[0]];return m});
+    m.group=TAG2G[m.tags[0]];return m});
   LOG=[];
   const add=(m,k,dd,out,extra)=>{const r=RULE(k);const send=addDays(dd,r.off);const age=dayDiff(T(),send);if(age<0||age>30)return;
     LOG.push(Object.assign({t:at(send,10),m:m.id,k,chan:r.chan,out:age===0&&NOWMIN<600?'sched':out,due:dd},extra||{}))};
@@ -490,15 +481,13 @@ function chip(m){const s=st(m);if(s==='over')return`<span class="chip late">${L(
   if(s==='cash')return`<span class="chip paid">${L('Grynais','Cash')} · ${COACH[m.cash]}</span>`;return`<span class="chip paid">${L('Sumokėta','Paid')}</span>`}
 const OUT={sent:['none','Išsiųsta','Sent'],ontime:['paid','Sumokėjo laiku','Paid on time'],dayPaid:['paid','Sumokėjo tą dieną','Paid same day'],latePaid:['paid','Sumokėjo po','Paid after'],sched:['wait','10:00 išeis','Goes at 10:00'],demo:['none','Demo · neišsiųsta','Demo · not sent']};
 const outChip=e=>{const o=OUT[e.out];return`<span class="chip ${o[0]}">${L(o[1],o[2])}${e.out==='latePaid'?' '+(e.after||1)+' '+L('d.','d'):''}</span>`};
-function remLine(m){const c=curLog(m);return c.length?`${L('Priminta','Reminded')} ${c.length}× · ${whenTxt(c[0].t).toLowerCase()}`:L('Dar nepriminta','Not reminded yet')}
+function remLine(m){const c=curLog(m);if(!c.length)return L('Dar nepriminta','Not reminded yet');const k=dayDiff(T(),c[0].t);return`${L('Priminta','Reminded')} ${c.length}× · ${k===0?L('šiandien','today'):k===1?L('vakar','yesterday'):fmtD(c[0].t)}`}
 let flashId=null;
 
 function render(){
   document.documentElement.lang=S.lang;
-  $('#langLt').setAttribute('aria-pressed',S.lang==='lt');$('#langEn').setAttribute('aria-pressed',S.lang==='en');
-  $('#demoTxt').innerHTML=`Demo<span class="long"> · ${fmtD(T())} · ${L('pavyzdiniai duomenys, niekas nesiunčiama','sample data, nothing is sent')}</span>`;
-  $('#dayBtn').textContent=L('Kita diena ▸','Next day ▸');$('#resetBtn').innerHTML=`<span class="long">${L('Atkurti','Reset')}</span><span class="short">↺</span>`;$('#resetBtn').setAttribute('aria-label',L('Atkurti','Reset'));$('#introBtn').setAttribute('aria-label',L('Kas tai?','What is this?'));
-  const tb=$('#themeBtn');tb.innerHTML=isDark()?I.sun:I.moon;tb.setAttribute('aria-label',isDark()?L('Šviesus režimas','Light mode'):L('Tamsus režimas','Dark mode'));
+  $('#demoTxt').innerHTML=`Demo · ${fmtD(T())}<span class="long"> · ${L('pavyzdiniai duomenys, niekas nesiunčiama','sample data, nothing is sent')}</span>`;
+  $('#dayBtn').textContent=L('Kita diena ▸','Next day ▸');$('#menuBtn').setAttribute('aria-label',L('Nustatymai','Settings'));$('#introBtn').setAttribute('aria-label',L('Kas tai?','What is this?'));
   $('#clubSub').textContent=`Kaunas · ${nMembers(M.length)}`;$('#whoTxt').textContent=L('Klubo vadovas','Club owner');
   const F=money();
   const V=[['pay',L('Kas sumokėjo','Who paid'),I.pay,F.over.length],['rem',L('Priminimai','Reminders'),I.rem,0],['dash',L('Suvestinė','Overview'),I.dash,0],['member',L('Ką gauna narys','What members get'),I.phone,0]];
@@ -506,50 +495,50 @@ function render(){
   $('#tabbar').innerHTML=V.map(([k,t,ic,b])=>`<button type="button" data-view="${k}" ${S.view===k?'aria-current="page"':''}>${ic}<span>${k==='member'?'SMS':k==='pay'?L('Mokėjimai','Payments'):t}</span>${b?`<span class="badge">${b}</span>`:''}</button>`).join('');
   const mob=`<div class="mob-club"><div class="fl-logo" role="img" aria-label="Fightersland"></div><div><b>Fightersland</b><small>Kaunas · ${nMembers(M.length)}</small></div><span class="k"><span class="logo-icon"><span>K</span></span>Kallo</span></div>`;
   const body=S.view==='pay'?viewPay(F):S.view==='rem'?viewRem(F):S.view==='dash'?viewDash(F):viewMember();
-  $('#view').innerHTML=mob+body+`<footer class="note">${L('Kallo demo, paruoštas Fightersland. Mokama tik grynais treneriui, todėl žinutėse nėra jokių nuorodų ar sąskaitų. Grupės ir treneriai – iš fightersland.lt, nariai ir sumos – išgalvoti. Niekas nesiunčiama.','A Kallo demo made for Fightersland. Members pay cash to their coach only, so messages carry no links or bank details. Groups and coaches come from fightersland.lt; members and amounts are made up. Nothing is sent.')}</footer>`;
+  $('#view').innerHTML=mob+body+`<footer class="note">${L('Kallo demo, paruoštas Fightersland. Mokama tik grynais, todėl žinutėse nėra nuorodų ar sąskaitų. Grupės ir treneriai – iš fightersland.lt, nariai ir sumos – išgalvoti. Niekas nesiunčiama.','A Kallo demo made for Fightersland. Members pay cash only, so messages carry no links or bank details. Groups and coaches come from fightersland.lt; members and amounts are made up. Nothing is sent.')}</footer>`;
   if(flashId){const r=document.querySelector(`[data-open="${flashId}"]`);if(r)r.classList.add('flash');flashId=null}
   if(S.dr)renderDrawer();
   if(!$('#intro').hidden)renderIntro();
 }
 
 /* ---------- 1. who has paid ---------- */
-function cashCard(F){const by={};F.cash.forEach(m=>{(by[m.cash]=by[m.cash]||[]).push(m)});
-  return`<section class="card"><div class="card-h"><h2>${L('Grynieji pas trenerius','Cash with coaches')}</h2><b>${eur(F.sum(F.cash))}</b></div><div class="card-b">${Object.keys(by).length?Object.entries(by).map(([c,ms])=>`<div class="cash-row"><div><b>${COACH[c]}</b><small>${ms.map(m=>m.first).join(', ')}</small></div><div class="r"><b>${eur(F.sum(ms))}</b><button type="button" class="btn btn-sm btn-ghost" data-act="handover" data-coach="${c}">${L('Atidavė','Handed in')}</button></div></div>`).join(''):`<p class="hint">${L('Visi grynieji atiduoti klubui.','All cash handed in to the club.')}</p>`}</div></section>`}
 function viewPay(F){
-  const filt={unpaid,over:m=>st(m)==='over',due:m=>st(m)==='due',paid:m=>['paid','cash'].includes(st(m)),all:()=>true};
+  const filt={unpaid,over:m=>st(m)==='over',due:m=>st(m)==='due',paid:m=>st(m)==='paid',all:()=>true};
   const inG=m=>S.group==='all'||m.group===S.group;
   const kp=(k,cls,label,list)=>`<button type="button" class="card kpi" data-status="${k}" aria-pressed="${S.status===k}"><span>${label}</span><strong class="${cls}">${list.length}</strong><small>${eur(F.sum(list))}</small></button>`;
   const kpis=`<div class="kpis k3">${kp('paid','paid',L('Sumokėjo','Paid'),F.paid)}${kp('due','wait',L('Laukiam','Due soon'),F.due)}${kp('over','late',L('Vėluoja','Late'),F.over)}</div>`;
-  const SEG=[['unpaid',L('Nesumokėję','Unpaid')],['over',L('Vėluoja','Late')],['due',L('Laukiam','Due soon')],['paid',L('Sumokėjo','Paid')],['all',L('Visi','All')]];
+  const SEG=[['unpaid',L('Nesumokėję','Unpaid')],['paid',L('Sumokėjo','Paid')],['all',L('Visi','All')]];
   const seg=`<div class="seg" role="group">${SEG.map(([k,t])=>`<button type="button" data-status="${k}" aria-pressed="${S.status===k}">${t}<span class="n">${M.filter(m=>filt[k](m)&&inG(m)).length}</span></button>`).join('')}</div>`;
   const sel=`<select id="groupSel" aria-label="${L('Grupė','Group')}"><option value="all">${L('Visos grupės','All groups')}</option>${Object.keys(GROUPS).map(g=>`<option value="${g}" ${S.group===g?'selected':''}>${gName(g)}</option>`).join('')}</select>`;
-  const order={over:0,due:1,cash:2,paid:3};const shown=M.filter(m=>filt[S.status](m)&&inG(m));let list='';
+  const order={over:0,due:1,paid:2};const shown=M.filter(m=>filt[S.status](m)&&inG(m));let list='';
   Object.keys(GROUPS).forEach(g=>{const rows=shown.filter(m=>m.group===g).sort((a,b)=>order[st(a)]-order[st(b)]||a.due-b.due);if(!rows.length)return;
-    const all=M.filter(m=>m.group===g),pd=all.filter(m=>['paid','cash'].includes(st(m))).length;
-    list+=`<div class="gh"><b>${gName(g)}</b><small>${L('sumokėjo','paid')} ${pd}/${all.length} · ${COACH[GROUPS[g][2]]}</small><div class="bar"><i style="width:${Math.round(pd/all.length*100)}%"></i></div></div>`;
-    list+=rows.map(m=>{const u=unpaid(m);return`<div class="mrow" data-open="${m.id}"><span class="av">${initials(m.name)}</span>
-      <div class="who"><button type="button" class="nm" data-open="${m.id}">${m.name}</button><small>${m.parent?L('Tėvai','Parent')+': '+m.parent:planName(m)}${u?' · '+remLine(m):''}</small></div>
+    const all=M.filter(m=>m.group===g),pd=all.filter(m=>st(m)==='paid').length;
+    list+=`<div class="gh"><b>${gName(g)}</b><small>${L('sumokėjo','paid')} ${pd}/${all.length}</small><div class="bar"><i style="width:${Math.round(pd/all.length*100)}%"></i></div></div>`;
+    list+=rows.map(m=>{const u=unpaid(m);const sub=[m.parent?`${m.age} m. · ${L('tėvai','parent')} ${m.parent.split(' ')[0]}`:'',u?remLine(m):planName(m)].filter(Boolean).join(' · ');
+      return`<div class="mrow" data-open="${m.id}"><span class="av">${initials(m.name)}</span>
+      <div class="who"><button type="button" class="nm" data-open="${m.id}">${m.name}</button><small>${sub}</small></div>
       <div class="money"><b>${eur(price(m))}</b>${chip(m)}</div>
-      ${u?`<div class="acts"><button type="button" class="btn btn-sm ${m.remToday?'btn-ok':'btn-coral'}" data-act="remind" data-id="${m.id}">${m.remToday?L('Priminta ✓','Sent ✓'):L('Priminti','Remind')}</button><button type="button" class="btn btn-sm btn-ghost" data-act="cash" data-id="${m.id}">${L('Pinigus gavau','Got the money')}</button></div>`:''}</div>`}).join('')});
+      ${u?`<div class="acts"><button type="button" class="btn btn-sm ${m.remToday?'btn-ok':'btn-ghost'}" data-act="remind" data-id="${m.id}">${m.remToday?L('Priminta ✓','Sent ✓'):L('Priminti','Remind')}</button><button type="button" class="btn btn-sm btn-coral" data-act="cash" data-id="${m.id}">${L('Pinigus gavau','Got the money')}</button></div>`:''}</div>`}).join('')});
   const todo=shown.filter(m=>unpaid(m)&&!m.remToday);
-  const next=`<section class="card"><div class="card-h"><h2>${L('Rytoj 10:00 išeis','Tomorrow at 10:00')}</h2></div><div class="card-b"><p style="margin:0 0 4px;font-size:20px;font-weight:700">${upTxt(upcoming())}</p><p class="hint" style="margin-bottom:12px">${L('Patys, pagal priminimų taisykles.','Automatically, by your reminder rules.')}</p><button type="button" class="btn btn-sm btn-ink" data-act="day">${L('Prasukti dieną ▸','Skip a day ▸')}</button></div></section>`;
   return`<div class="page-h"><div><h1>${L('Kas sumokėjo?','Who has paid?')}</h1><p>${L('Šiandien','Today')} ${fmtD(T())} · ${L('sumokėjo','paid')} ${F.paid.length} ${L('iš','of')} ${M.length}</p></div>${todo.length?`<button type="button" class="btn btn-coral" data-act="remindlist">${L('Priminti visiems','Remind all')} (${todo.length})</button>`:''}</div>
-  ${kpis}<div class="grid2"><section class="card"><div class="card-h"><div class="toolbar">${seg}${sel}</div></div><div>${list||`<div class="empty">${L('Čia nieko nėra.','Nobody here.')}</div>`}</div></section><div class="stack">${cashCard(F)}${next}</div></div>`;
+  ${kpis}<section class="card"><div class="card-h"><div class="toolbar">${seg}${sel}</div></div>
+  <p class="hint mob-only" style="padding:10px 16px 2px">${L('Paspauskite narį: priminti arba pažymėti „Pinigus gavau“.','Tap a member to remind them or mark "Got the money".')}</p>
+  <div>${list||`<div class="empty">${L('Čia nieko nėra.','Nobody here.')}</div>`}</div></section>`;
 }
 
 /* ---------- 2. reminders ---------- */
 function viewRem(F){
   const R=S.report;
-  const rep=R?`<div class="report"><div><span>${L('Išsiųsta','Sent')}</span><b>${R.sent}</b></div><div class="ok"><span>${L('Atnešė grynais','Brought cash')}</span><b>${R.paid}</b></div><div class="ok"><span>${L('Gauta','Received')}</span><b>${eur(R.sum)}</b></div></div>`:'';
+  const rep=R?`<div class="report"><div><span>${L('Išsiųsta','Sent')}</span><b>${R.sent}</b></div><div class="ok"><span>${L('Sumokėjo','Paid')}</span><b>${R.paid}</b></div><div class="ok"><span>${L('Gauta','Received')}</span><b>${eur(R.sum)}</b></div></div>`:'';
   const steps=RULES.map(r=>`<div class="step${S.rules[r.k]?'':' off'}"><span class="when ${r.w}">${r.off>0?'+':r.off<0?'−':''}${Math.abs(r.off)}<small>${r.off===0?L('diena','day'):L('d.','days')}</small></span>
-    <div><b>${L(...r.name)}</b><small>${L(...r.via)} · ${L(...r.tone)}</small><button type="button" class="edit" data-act="tpl" data-k="${r.k}">${L('Žiūrėti ir keisti tekstą','See and edit text')}</button></div>
+    <div><b>${L(...r.name)}</b><small>${L(...r.via)} · ${L(...r.tone)}</small><button type="button" class="edit" data-act="tpl" data-k="${r.k}">${L('Keisti tekstą','Edit text')}</button></div>
     <button type="button" class="tg" role="switch" aria-checked="${S.rules[r.k]}" aria-label="${L(...r.name)}" data-rule="${r.k}"></button></div>`).join('');
   const LF=[['all',L('Visos','All')],['paid',L('Po jų sumokėjo','Led to payment')],['manual',L('Rankiniai','Manual')]];
   const fx={all:()=>true,paid:e=>['ontime','dayPaid','latePaid'].includes(e.out),manual:e=>e.manual};
   const rows=LOG.filter(e=>e.chan!=='task').filter(fx[S.logF]);
   const log=rows.slice(0,S.logN).map(e=>{const m=byId(e.m);return`<div class="log-row${e.fresh?' new':''}"><i>${e.chan==='sms'?'SMS':'@'}</i><div style="min-width:0"><b>${recip(m)}</b>${m.parent?` <span class="hint" style="display:inline">· ${m.first}</span>`:''}<div class="tx">${esc(logText(e))}</div></div><div style="display:grid;gap:4px;justify-items:end"><time>${whenTxt(e.t)}</time>${outChip(e)}</div></div>`}).join('');
-  return`<div class="page-h"><div><h1>${L('Priminimai','Reminders')}</h1><p>${L('Išeina patys, kasdien 10:00. Kai treneris pažymi grynus, jie sustoja.','They go out on their own at 10:00 each day. They stop once a coach marks the cash.')}</p></div></div>
-  <div class="try"><div><b>${L('Pažiūrėkite, kaip tai veikia','See it work')}</b><p>${L('Paspauskite ir praeis viena diena: priminimai išeis, dalis narių atneš grynus.','Tap it and one day passes: reminders go out and some members bring cash.')}</p></div><button type="button" class="btn btn-coral" data-act="day">${L('Kita diena ▸','Next day ▸')}</button></div>
+  return`<div class="page-h"><div><h1>${L('Priminimai','Reminders')}</h1><p>${L('Išeina patys, kasdien 10:00. Kai pažymite „Pinigus gavau“, jie sustoja.','They go out on their own at 10:00 each day. They stop once you tap "Got the money".')}</p></div></div>
+  <div class="try"><div><b>${L('Pažiūrėkite, kaip tai veikia','See it work')}</b><p>${L('Paspauskite ir praeis viena diena: priminimai išeis, dalis narių sumokės.','Tap it and one day passes: reminders go out and some members pay.')}</p><p style="margin-top:8px;opacity:1"><b>${L('Rytoj 10:00 išeis','Tomorrow at 10:00')}: ${upTxt(upcoming())}</b></p></div><button type="button" class="btn btn-coral" data-act="day">${L('Kita diena ▸','Next day ▸')}</button></div>
   ${rep}
   <div class="grid2"><div class="stack"><section class="card"><div class="card-h"><h2>${L('Kada ir ką siunčiame','What goes out when')}</h2></div><div class="steps">${steps}</div></section>
     <section class="card"><div class="card-h"><h2>${L('Priminti dabar','Remind now')}</h2></div><div class="card-b row-btns"><button type="button" class="btn btn-coral" data-act="remindset" data-set="over" ${F.over.some(m=>!m.remToday)?'':'disabled'}>${L('Vėluojantiems','Late')} (${F.over.filter(m=>!m.remToday).length})</button><button type="button" class="btn btn-ghost" data-act="remindset" data-set="due" ${F.due.some(m=>!m.remToday)?'':'disabled'}>${L('Laukiamiems','Due soon')} (${F.due.filter(m=>!m.remToday).length})</button></div></section></div>
@@ -576,7 +565,7 @@ function viewDash(F){
   <div class="stack"><section class="card"><div class="card-h"><h2>${L('Ką padarė priminimai','What reminders did')}</h2><span class="hint">30 ${L('d.','days')}</span></div><div class="card-b"><div class="facts">
       <div><span>${L('Išsiųsta','Sent')}</span><b>${sent}</b></div><div class="ok"><span>${L('Sumokėjo laiku','Paid on time')}</span><b>${F.onT.length}</b></div>
       <div class="ok"><span>${L('Atgauta vėlavusių','Late ones won back')}</span><b>${F.rec.length}</b></div><div class="ok"><span>${L('Atgauta suma','Amount won back')}</span><b>${eur(F.recSum)}</b></div></div></div></section>
-    ${cashCard(F)}</div></div>`;
+    </div></div>`;
 }
 
 /* ---------- 4. member's phone ---------- */
@@ -594,7 +583,7 @@ function viewMember(){
 function renderIntro(){
   const steps=[[L('Matote, kas sumokėjo','See who has paid'),L('Kiekvienas narys ir grupė: suma, terminas ir kiek dienų vėluoja.','Every member and group: amount, due date and how many days late.')],
     [L('Priminimai išeina patys','Reminders go out on their own'),L('SMS prieš terminą ir vėluojant, vis griežtesniu tonu. Apie vaikus – tėvams.','SMS before the due date and when late, each one firmer. About children, to parents.')],
-    [L('„Pinigus gavau“','"Got the money"'),L('Treneris paspaudžia, priminimai sustoja, o jūs matote, kiek grynųjų yra pas kurį trenerį.','The coach taps it, reminders stop, and you see how much cash each coach holds.')]];
+    [L('„Pinigus gavau“','"Got the money"'),L('Narys atnešė pinigus? Vienas paspaudimas – ir priminimai jam sustoja.','A member brought the money? One tap and their reminders stop.')]];
   $('#introCard').innerHTML=`<div class="intro-logos"><div class="fl-logo" role="img" aria-label="Fightersland"></div><span class="x2">×</span><span class="logo"><span class="logo-icon"><span>K</span></span><span class="logo-text">allo</span></span></div>
     <div style="display:grid;gap:10px"><h1 id="iTitle">${L('Kas sumokėjo – matosi iš karto. Priminimai – patys.','See who has paid at a glance. Reminders send themselves.')}</h1>
     <p class="lede">${L('Kallo Fightersland klubui: mokesčiai grynais, aiškus sąrašas ir automatiniai SMS priminimai. Nebereikia rašyti kiekvienam asmeniškai.','Kallo for Fightersland: cash fees, one clear list and automatic SMS reminders. No more messaging everyone by hand.')}</p></div>
@@ -615,10 +604,14 @@ function phoneBox(m,k,chan){const r=msg(m,k,chan);const sg=segs(r.body);
 const chanSeg=()=>`<div class="seg" role="group"><button type="button" data-chan="sms" aria-pressed="${S.chan==='sms'}">SMS</button><button type="button" data-chan="email" aria-pressed="${S.chan==='email'}">${L('El. paštas','Email')}</button></div>`;
 const EX={pre:[1,3],day:[28,0],l3:[43,-3],l10:[3,-10],l21:[13,-21]};
 function renderDrawer(){const d=S.dr;let h=`<button type="button" class="x" data-act="close" aria-label="${L('Uždaryti','Close')}">×</button>`;
-  if(d.type==='member'){const m=byId(d.id),u=unpaid(m),c=LOG.filter(e=>e.m===m.id&&e.chan!=='task'&&e.out!=='sched').slice(0,4);
+  if(d.type==='menu'){
+    h+=`<h2 id="dTitle">${L('Nustatymai','Settings')}</h2>
+    <div style="display:grid;gap:8px"><b>${L('Kalba','Language')}</b><div class="seg" role="group"><button type="button" data-lang="lt" aria-pressed="${S.lang==='lt'}">Lietuvių</button><button type="button" data-lang="en" aria-pressed="${S.lang==='en'}">English</button></div></div>
+    <div style="display:grid;gap:8px"><b>Demo</b><p class="hint">${L('Grąžina pradinius narius, datą ir žinutes.','Brings back the starting members, date and messages.')}</p><div><button type="button" class="btn btn-ghost" data-act="reset">${L('Atkurti demo','Reset demo')}</button></div></div>`;}
+  else if(d.type==='member'){const m=byId(d.id),u=unpaid(m),c=LOG.filter(e=>e.m===m.id&&e.chan!=='task'&&e.out!=='sched').slice(0,4);
     h+=`<h2 id="dTitle">${m.name}</h2><div>${chip(m)}</div>
     <dl class="dl"><dt>${L('Grupė','Group')}</dt><dd>${gName(m.group)}</dd><dt>${L('Treneris','Coach')}</dt><dd>${COACH[coachOf(m)]}</dd>${m.parent?`<dt>${L('Tėvai','Parent')}</dt><dd>${m.parent}</dd>`:''}<dt>${L('Suma','Amount')}</dt><dd>${eur(price(m))} · ${planName(m)}</dd><dt>${u?L('Terminas','Due'):L('Kitas','Next')}</dt><dd>${fmtD(dueDate(m))}</dd><dt>${L('Telefonas','Phone')}</dt><dd>${phone(m)}</dd></dl>
-    ${u?`<div class="row-btns"><button type="button" class="btn btn-coral" data-act="remind" data-id="${m.id}">${L('Priminti','Remind')}</button><button type="button" class="btn btn-ghost" data-act="cash" data-id="${m.id}">${L('Pinigus gavau','Got the money')}</button></div>`:''}
+    ${u?`<div class="row-btns"><button type="button" class="btn btn-coral" data-act="cash" data-id="${m.id}">${L('Pinigus gavau','Got the money')}</button><button type="button" class="btn btn-ghost" data-act="remind" data-id="${m.id}">${L('Priminti','Remind')}</button></div>`:''}
     <div><b style="font-size:14px">${L('Žinutės','Messages')}</b>${c.length?c.map(e=>`<div class="log-row" style="padding-left:0;padding-right:0"><i>${e.chan==='sms'?'SMS':'@'}</i><div style="min-width:0"><time>${whenTxt(e.t)}</time><div class="tx">${esc(logText(e))}</div></div>${outChip(e)}</div>`).join(''):`<p class="hint">${L('Dar nesiųsta.','None yet.')}</p>`}</div>`;}
   else if(d.type==='remind'){const ms=d.ids.map(byId),m=ms[0],k=lvlOf(m);
     h+=`<h2 id="dTitle">${ms.length>1?L('Priminti','Remind')+' '+nMembers(ms.length):L('Priminti','Remind')+': '+m.first}</h2>
@@ -647,7 +640,7 @@ function stopFor(m){LOG.forEach(e=>{if(e.m===m.id&&e.out==='sched')e.out='ontime
 // all money is cash: the coach of the member's group holds it until it is handed in
 function takeCash(m){const late=Math.max(0,-m.due);const last=curLog(m)[0];
   if(last){last.out=late>0?'latePaid':'ontime';last.after=Math.max(1,dayDiff(T(),last.t))}
-  stopFor(m);m.due+=30;m.cash=coachOf(m);m.remToday=false;flashId=m.id}
+  stopFor(m);m.due+=30;m.remToday=false;flashId=m.id}
 function nextDay(){
   DAY++;LOG.forEach(e=>{if(e.out==='sched')e.out='sent';e.fresh=false});
   M.forEach(m=>{m.due--;m.remToday=false});
@@ -657,7 +650,7 @@ function nextDay(){
   let sent=0;M.forEach(m=>{if(m.cash)return;RULES.forEach(r=>{if(S.rules[r.k]&&m.due===-r.off&&unpaid(m)){LOG.unshift({t:at(T(),10),m:m.id,k:r.k,chan:r.chan,out:'sent',due:dueDate(m),fresh:true});if(r.chan!=='task')sent++}})});
   LOG.sort((a,b)=>b.t-a.t);
   S.report={sent,paid:paid.length,sum:paid.reduce((a,m)=>a+price(m),0)};
-  render();toast(L(`${cap(fmtD(T()))}: išsiųsta ${sent}, atnešė grynais ${paid.length}${paid.length?' ('+eur(S.report.sum)+')':''}.`,`${fmtD(T())}: ${sent} sent, ${paid.length} brought cash${paid.length?' ('+eur(S.report.sum)+')':''}.`));
+  render();toast(L(`${cap(fmtD(T()))}: išsiųsta ${sent}, sumokėjo ${paid.length}${paid.length?' ('+eur(S.report.sum)+')':''}.`,`${fmtD(T())}: ${sent} sent, ${paid.length} paid${paid.length?' ('+eur(S.report.sum)+')':''}.`));
 }
 document.addEventListener('click',e=>{
   if(e.target.id==='dbg'){closeD();return}
@@ -680,14 +673,13 @@ document.addEventListener('click',e=>{
     case'intro':openIntro();break;
     case'introgo':closeIntro();S.view=d.to;render();window.scrollTo({top:0});break;
     case'reset':seed();closeD();render();toast(L('Demo atkurtas.','Demo reset.'));break;
-    case'theme':{const t=isDark()?'light':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('fl-demo-theme',t)}catch(x){}render();break}
+    case'menu':openD({type:'menu'});break;
     case'close':closeD();render();break;
     case'remind':openD({type:'remind',ids:[id]});break;
     case'remindset':{const ids=F[d.set].filter(m=>!m.remToday).map(m=>m.id);if(ids.length)openD({type:'remind',ids});break}
     case'remindlist':{const f={unpaid,over:m=>st(m)==='over',due:m=>st(m)==='due'}[S.status]||unpaid;const ids=M.filter(m=>f(m)&&(S.group==='all'||m.group===S.group)&&!m.remToday).map(m=>m.id);if(ids.length)openD({type:'remind',ids});break}
     case'send':{const ids=S.dr.ids;const t=DAY?at(T(),12):new Date();ids.forEach(i=>{const m=byId(i);m.remToday=true;LOG.unshift({t,m:i,k:lvlOf(m),chan:S.chan,out:'demo',manual:true,late:Math.max(0,-m.due),due:dueDate(m),fresh:true})});S.dr.sent=true;render();break}
-    case'cash':{const m=byId(id);takeCash(m);if(S.dr)closeD();render();toast(L(`${m.first} atnešė ${eur(price(m))} grynais (${COACH[m.cash]}). Priminimai sustabdyti.`,`${m.first}: ${eur(price(m))} cash with ${COACH[m.cash]}. Reminders stopped.`));break}
-    case'handover':{M.filter(m=>m.cash===d.coach).forEach(m=>{m.cash=null});render();toast(L('Grynieji atiduoti klubui.','Cash handed in to the club.'));break}
+    case'cash':{const m=byId(id);takeCash(m);if(S.dr)closeD();render();toast(L(`${m.first} sumokėjo ${eur(price(m))} grynais. Priminimai sustabdyti.`,`${m.first} paid ${eur(price(m))} in cash. Reminders stopped.`));break}
     case'tpl':openD({type:'tpl',k:d.k});break;
     case'tplreset':S.tpl[S.lang][S.dr.k]=DEF_TPL[S.lang][S.dr.k];renderDrawer();break;
     case'more':S.logN+=10;render();break;
@@ -698,7 +690,6 @@ function updPrev(){const d=S.dr;if(!d||d.type!=='tpl')return;const r=RULE(d.k);c
 document.addEventListener('input',e=>{if(e.target.id==='tplText'){S.tpl[S.lang][S.dr.k]=e.target.value;updPrev()}});
 document.addEventListener('change',e=>{if(e.target.id==='deacc'){S.deacc=e.target.checked;if(S.dr&&S.dr.type==='tpl')updPrev();else renderDrawer()}if(e.target.id==='groupSel'){S.group=e.target.value;render()}});
 document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('#intro').hidden){closeIntro();return}if(S.dr){closeD();render()}});
-matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>render());
 
 seed();render();openIntro();
 </script>
