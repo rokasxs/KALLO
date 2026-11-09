@@ -1023,5 +1023,9 @@
     });
   })();
 </script>
+<script>
+// a demo link (kallo.lt/k/...) sends people here with ?klubas=, so the form already has their club name
+(function(){try{var k=new URLSearchParams(location.search).get('klubas');var f=document.getElementById('club');if(k&&f&&!f.value)f.value=k.slice(0,80)}catch(e){}})();
+</script>
 </body>
 </html>

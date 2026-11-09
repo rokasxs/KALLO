@@ -1,3 +1,6 @@
 # Keep internal folders off the public website
 /crm/*   /404.html   404!
 /api/*   /404.html   404!
+
+# Personal demo links for clubs: kallo.lt/k/Klubo-pavadinimas
+/k/*     /k/index.html   200
